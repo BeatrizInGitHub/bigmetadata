@@ -1,0 +1,533 @@
+.. _us.census.acs.C24050007:
+
+Workers employed in firms in transportation, warehousing, and utilities
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+The Transportation and Warehousing sector includes industries providing transportation of passengers and cargo, warehousing and storage for goods, scenic and sightseeing transportation, and support activities related to modes of transportation. The modes of transportation are air, rail, water, road, and pipeline.
+
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+
+
+   
+   .. tab:: {"tab_name": "Per Employed Population"}
+
+      Update a field of a table with an estimate of "Workers employed in firms in transportation, warehousing, and utilities" per Employed Population for a polygon
+      using a combination of weighting by area and Employed Population.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.acs.C24050007",
+              "denom_id": "us.census.acs.B23025004",
+              "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Workers employed in firms in transportation, warehousing, and utilities" per Employed Population for a polygon
+      using a combination of weighting by area and Employed Population.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(-73.9, 40.7), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.acs.C24050007",
+               "denom_id": "us.census.acs.B23025004",
+               "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS employed_transportation_warehousing_utilities_rate_2015_2015
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   
+
+
+
+
+   .. tab:: {"tab_name": "Per sq km"}
+
+      Update a field of a table with an estimate of "Workers employed in firms in transportation, warehousing, and utilities" per square kilometer using area
+      weighted interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.acs.C24050007",
+              "normalization": "areaNormalized"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Workers employed in firms in transportation, warehousing, and utilities" per square kilometer using area
+      weighted interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(-73.9, 40.7), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.acs.C24050007",
+               "normalization": "areaNormalized"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS employed_transportation_warehousing_utilities_per_sq_km_2015_2015
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   .. tab:: {"tab_name": "Raw count"}
+
+      Update a field of a table with an estimate of "Workers employed in firms in transportation, warehousing, and utilities" for a polygon using area-weighted
+      interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.acs.C24050007",
+              "normalization": "predenominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Workers employed in firms in transportation, warehousing, and utilities" for a polygon using area-weighted
+      interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(-73.9, 40.7), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.acs.C24050007",
+               "normalization": "predenominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS employed_transportation_warehousing_utilities_2015_2015
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+
+
+
+
+
+
+
+
+Boundaries
+~~~~~~~~~~
+
+.. raw:: html
+
+  <table border="1" class="docutils">
+  <thead valign="bottom">
+  <tr class="row-odd"><th class="head">Boundary</th>
+  <th class="head">Time (default is latest)</th>
+  </tr>
+  </thead>
+  <tbody valign="top">
+
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.school_district_secondary`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.state_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.puma_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.county`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.school_district_elementary`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.school_district_elementary_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.place_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.congressional_district`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.place`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.congressional_district_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.school_district_unified_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.puma`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.cbsa`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.cbsa_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.county_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.state`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.school_district_secondary_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.school_district_unified`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+
+.. raw:: html
+
+  </tr>
+  </tbody>
+  </table>
+
+
+
+
+Related columns
+~~~~~~~~~~~~~~~
+    
+      * :ref:`us.census.acs.B23025004`
+    
+
+
+
+Source
+~~~~~~
+    
+      * :ref:`us.census.acs.acs`
+    
+
+
+
+License
+~~~~~~~
+    
+      * :ref:`tags.no-restrictions`
+    

@@ -1,0 +1,202 @@
+.. Sources:
+
+Sources
+==============================================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+
+.. _us.census.lodes.lehd-lodes:
+
+
+-------------------------------------------------------------------------------
+
+
+
+
+
+.. _au.geo.au-census:
+
+Australian Bureau of Statistics (ABS)
+-------------------------------------------------------------------------------
+
+The `Australian Bureau of Statistics <http://abs.gov.au/websitedbs/censushome.nsf/home/datapacks>`
+
+
+
+.. _br.data.ibge-censo:
+
+Censo Demográfico Instituto Brasileiro de Geografia e Estatística (IBGE)
+-------------------------------------------------------------------------------
+
+The `Instituto Brasileiro de Geografia e Estatística <http://ibge.gov.br>`_ `Censo Demográfico <http://censo2010.ibge.gov.br/>`
+
+
+
+.. _uk.cdrc.cdrc-source:
+
+Consumer Data Research Centre
+-------------------------------------------------------------------------------
+
+The 2011 Area Classification for Output Areas (2011 OAC) is a UK geodemographic classification produced as a collaboration between the Office for National Statistics and University College London. For further information regarding the 2011 OAC please visit: http://www.ons.gov.uk/ons/guide-method/geography/products/area-classifications/ns-area-classifications/ns-2011-area-classifications/index.html or http://www.opengeodemographics.com. CDRC 2011 OAC Geodata Pack by the ESRC Consumer Data Research Centre; Contains National Statistics data Crown copyright and database right 2015; Contains Ordnance Survey data Crown copyright and database right 2015
+
+
+
+.. _eu.geo.eurographics-source:
+
+EuroGraphics EuroGlobalMap
+-------------------------------------------------------------------------------
+
+EuroGraphics `EuroGlobalMap <http://www.eurogeographics.org/content/euroglobalmap-opendata?sid=10868>`_
+
+
+
+.. _eu.eurostat.eurostat-source:
+
+Eurostat
+-------------------------------------------------------------------------------
+
+Eurostat data can be found `here <http://ec.europa.eu>`_.
+
+
+
+.. _fr.fr_income.insee:
+
+INSEE
+-------------------------------------------------------------------------------
+
+http://www.insee.fr/fr/bases-de-donnees/default.asp?page=recensement/resultats/2012/donnees-detaillees-recensement-2012.htm
+
+
+
+.. _mx.inegi_columns.inegi-source:
+
+Instituto Nacional de Estadística y Geografía (INEGI)
+-------------------------------------------------------------------------------
+
+INEGI data provided by `Diego Valle-Jones <https://www.diegovalle.net/>`_
+
+
+
+.. _es.cnig.cnig-source:
+
+National Center for Geographic Information (CNIG)
+-------------------------------------------------------------------------------
+
+`The National Center for Geographic Information (CNIG) <https://www.cnig.es/>`_
+
+
+
+.. _fr.insee.insee:
+
+National Institute of Statistics and Economic Studies (INSEE)
+-------------------------------------------------------------------------------
+
+The `Institut national de la statistique et des études économiques <http://www.insee.fr/fr/bases-de-donnees/default.asp?page=recensement/resultats/2012/donnees-detaillees-recensement-2012.htm>`_.
+
+
+
+.. _es.ine.ine-source:
+
+National Statistics Institute (INE) Legal Notice
+-------------------------------------------------------------------------------
+
+More information `here <http://ine.es/ss/Satellite?L=1&c=Page&cid=1254735849170&p=1254735849170&pagename=Ayuda%2FINELayout#>`_
+
+
+
+.. _uk.census.metadata.nisra:
+
+Northern Ireland Statistics and Research Agency
+-------------------------------------------------------------------------------
+
+`Northern Ireland Statistics and Research Agency <https://www.nisra.gov.uk/`_
+
+
+
+.. _uk.census.metadata.ons:
+
+Office for National Statistics (ONS)
+-------------------------------------------------------------------------------
+
+The UK's largest independent producer of official statistics and the recognised national statistical institute of the UK (`ONS <https://www.ons.gov.uk/>`_)
+
+
+
+.. _us.bls.qcew:
+
+Quartery Census of Employment and Wages (QCEW)
+-------------------------------------------------------------------------------
+
+`Bureau of Labor Statistics QCEW <http://www.bls.gov/cew/home.htm>`_
+
+
+
+.. _uk.census.metadata.scotland-census:
+
+Scotland's Census Data Warehouse by National Records of Scotland
+-------------------------------------------------------------------------------
+
+`Scotland Census <http://www.scotlandscensus.gov.uk/`_
+
+
+
+.. _ca.statcan.license.statcan-census-2011:
+
+Statistics Canada Census of Population 2011
+-------------------------------------------------------------------------------
+
+Adapted from Statistics Canada, Census of Population 2011. This does not constitute an endorsement by Statistics Canada of this product.
+
+
+
+.. _ca.statcan.license.statcan-nhs-2011:
+
+Statistics Canada National Household Survey 2011
+-------------------------------------------------------------------------------
+
+Adapted from Statistics Canada, National Household Survey 2011. This does not constitute an endorsement by Statistics Canada of this product.
+
+
+
+.. _us.census.acs.acs:
+
+US American Community Survey
+-------------------------------------------------------------------------------
+
+`The United States American Community Survey <https://www.census.gov/programs-surveys/acs/>`_
+
+
+
+.. _us.census.tiger.tiger-source:
+
+US Census TIGER/Line Shapefiles
+-------------------------------------------------------------------------------
+
+`TIGER/Line Shapefiles <https://www.census.gov/geo/maps-data/data/tiger-line.html>`_
+
+
+
+.. _us.epa.huc.epa-enviroatlas:
+
+United States Environmental Protection Agency (EPA) EnviroAtlas
+-------------------------------------------------------------------------------
+
+EnviroAtlas is a collaborative project
+developed by researchers at EPA in cooperation with the U.S. Geological Survey
+(USGS), the U.S. Department of Agriculture's Forest Service and Natural
+Resources Conservation Service (NRCS), and Landscope America.  The data
+download page can be found `here <https://www.epa.gov/enviroatlas/forms/enviroatlas-data-download>`_.
+
+
+
+.. _us.zillow.zillow-source:
+
+Zillow Data
+-------------------------------------------------------------------------------
+
+Zillow makes available data free for reuse `here <http://www.zillow.com/research/data/>`_.
+

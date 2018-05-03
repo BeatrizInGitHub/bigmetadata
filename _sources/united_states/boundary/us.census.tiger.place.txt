@@ -1,0 +1,112 @@
+.. _us.census.tiger.place:
+
+Incorporated Places
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Incorporated places are those reported to the Census Bureau as legally in existence as of January 1, 2010, as reported in the latest Boundary and Annexation Survey (BAS), under the laws of their respective states. An incorporated place is established to provide governmental functions for a concentration of people as opposed to a minor civil division, which generally is created to provide services or administer an area without regard, necessarily, to population. Places always are within a single state or equivalent entity, but may extend across county and county subdivision boundaries. An incorporated place usually is a city, town, village, or borough, but can have other legal descriptions. For Census Bureau data tabulation and presentation purposes, incorporated places exclude:
+
+Boroughs in Alaska (treated as statistical equivalents of counties).
+Towns in the New England states, New York, and Wisconsin (treated as MCDs).
+Boroughs in New York (treated as MCDs).
+
+Census Designated Places (CDPs) are the statistical counterparts of incorporated places, and are delineated to provide data for settled concentrations of population that are identifiable by name but are not legally incorporated under the laws of the state in which they are located. The boundaries usually are defined in cooperation with local or tribal officials and generally updated prior to each decennial census. These boundaries, which usually coincide with visible features or the boundary of an adjacent incorporated place or another legal entity boundary, have no legal status, nor do these places have officials elected to serve traditional municipal functions. CDP boundaries may change from one decennial census
+to the next with changes in the settlement pattern; a CDP with the same name as in an earlier census does not necessarily have the same boundary. CDPs must be contained within a single state and may not extend into an incorporated place. There are no population size requirements for CDPs.
+
+Hawaii is the only state that has no incorporated places recognized by the Census Bureau. All places shown in decennial census data products for Hawaii are CDPs. By agreement with the state of Hawaii, the Census Bureau does not show data separately for the city of Honolulu, which is coextensive with Honolulu County. In Puerto Rico, which also does not have incorporated places, the Census Bureau recognizes only CDPs and refers to them as comunidades or zonas urbanas. Guam also has only CDPs.
+
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+   .. tab:: {"tab_name": "Boundaries within polygon"}
+      Insert all  "Incorporated Places" geometries into another table:
+
+      .. code-block:: postgresql
+
+          INSERT INTO <table_to_update> (cartodb_id, the_geom, name, the_geom_webmercator)
+          SELECT ROW_NUMBER() OVER () AS cartodb_id,
+                 the_geom,
+                 geom_refs,
+                 ST_TRANSFORM(the_geom, 3857) the_geom_webmercator
+          FROM OBS_GetBoundariesByGeometry(
+            ST_GeomFromText('POLYGON((-172.2 -14.7,-172.2 71.7,173.7 71.7,173.7 -14.7,-172.2 -14.7))', 4326),
+            'us.census.tiger.place'
+          )
+
+   .. tab:: {"tab_name": "Boundaries by identifier in another table"}
+
+      Update the boundaries in another table matching the table's ID column.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT <geo_id> AS id
+            FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_MakeEnvelope(-179, 89, 179, -89, 4326),
+              '[{"geom_id": "us.census.tiger.place"}]'
+            ) meta
+          )
+          UPDATE <table_to_update> SET
+                the_geom = (data->0->>'value')::Geometry,
+                the_geom_webmercator = ST_Transform((data->0->>'value')::Geometry, 3857)
+          FROM OBS_GetData(
+                (SELECT Array_agg(id) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.<geo_id> = obs_data.id
+
+      Obtain boundaries matched to another table's ID column.
+
+      .. code-block:: postgresql
+
+          WITH ids AS (
+            SELECT ARRAY_AGG(<geo_id>) ids
+            FROM <table_with_ids>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_MakeEnvelope(-179, 89, 179, -89, 4326),
+              '[{"geom_id": "us.census.tiger.place"}]'
+            ) meta
+          )
+          SELECT ROW_NUMBER() OVER () AS cartodb_id,
+                 data->0->>'geomref' as geomref,
+                 (data->0->>'value')::Geometry as the_geom,
+                 ST_Transform((data->0->>'value')::Geometry, 3857) AS the_geom_webmercator
+          FROM OBS_GetData((SELECT ids FROM ids), (SELECT meta FROM meta))
+
+
+
+
+
+
+
+
+
+Source
+~~~~~~
+    
+      * :ref:`us.census.tiger.tiger-source`
+    
+
+
+Time (default is latest)
+~~~~~~~~~~~~~~~~~~~~~~~~
+  
+      * 2015
+  
+
+
+License
+~~~~~~~
+    
+      * :ref:`tags.no-restrictions`
+    

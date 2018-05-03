@@ -1,0 +1,278 @@
+.. _es.ine.t13_12:
+
+Females without information regarding their educational level  (under 16 years of age)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+
+
+   
+   .. tab:: {"tab_name": "Per Persons without information regarding their educational level (aged under 16 years)"}
+
+      Update a field of a table with an estimate of "Females without information regarding their educational level  (under 16 years of age)" per Persons without information regarding their educational level (aged under 16 years) for a polygon
+      using a combination of weighting by area and Persons without information regarding their educational level (aged under 16 years).
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "es.ine.t13_12",
+              "denom_id": "es.ine.t12_6",
+              "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Females without information regarding their educational level  (under 16 years of age)" per Persons without information regarding their educational level (aged under 16 years) for a polygon
+      using a combination of weighting by area and Persons without information regarding their educational level (aged under 16 years).
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(-2.511, 42.822), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "es.ine.t13_12",
+               "denom_id": "es.ine.t12_6",
+               "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS female_no_education_info_under_16_rate_2011
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   
+
+
+
+   
+   .. tab:: {"tab_name": "Per Females"}
+
+      Update a field of a table with an estimate of "Females without information regarding their educational level  (under 16 years of age)" per Females for a polygon
+      using a combination of weighting by area and Females.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "es.ine.t13_12",
+              "denom_id": "es.ine.t2_2",
+              "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Females without information regarding their educational level  (under 16 years of age)" per Females for a polygon
+      using a combination of weighting by area and Females.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(-2.511, 42.822), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "es.ine.t13_12",
+               "denom_id": "es.ine.t2_2",
+               "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS female_no_education_info_under_16_rate_2011
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   
+
+
+
+
+   .. tab:: {"tab_name": "Per sq km"}
+
+      Update a field of a table with an estimate of "Females without information regarding their educational level  (under 16 years of age)" per square kilometer using area
+      weighted interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "es.ine.t13_12",
+              "normalization": "areaNormalized"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Females without information regarding their educational level  (under 16 years of age)" per square kilometer using area
+      weighted interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(-2.511, 42.822), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "es.ine.t13_12",
+               "normalization": "areaNormalized"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS female_no_education_info_under_16_per_sq_km_2011
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   .. tab:: {"tab_name": "Raw count"}
+
+      Update a field of a table with an estimate of "Females without information regarding their educational level  (under 16 years of age)" for a polygon using area-weighted
+      interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "es.ine.t13_12",
+              "normalization": "predenominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Females without information regarding their educational level  (under 16 years of age)" for a polygon using area-weighted
+      interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(-2.511, 42.822), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "es.ine.t13_12",
+               "normalization": "predenominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS female_no_education_info_under_16_2011
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+
+
+
+
+
+
+
+
+Boundaries
+~~~~~~~~~~
+
+.. raw:: html
+
+  <table border="1" class="docutils">
+  <thead valign="bottom">
+  <tr class="row-odd"><th class="head">Boundary</th>
+  <th class="head">Time (default is latest)</th>
+  </tr>
+  </thead>
+  <tbody valign="top">
+
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`es.ine.the_geom`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2011
+
+.. raw:: html
+
+  </td>
+
+  
+
+.. raw:: html
+
+  </tr>
+  </tbody>
+  </table>
+
+
+
+
+Related columns
+~~~~~~~~~~~~~~~
+    
+      * :ref:`es.ine.t12_6`
+    
+      * :ref:`es.ine.t2_2`
+    
+
+
+
+Source
+~~~~~~
+    
+      * :ref:`es.ine.ine-source`
+    
+
+
+
+License
+~~~~~~~
+    
+      * :ref:`es.ine.ine-license`
+    

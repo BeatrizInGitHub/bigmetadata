@@ -1,0 +1,103 @@
+.. _us.census.tiger.cbsa_clipped:
+
+Shoreline clipped Core Based Statistical Area (CBSA)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+A cartography-ready version of Core Based Statistical Area (CBSA)
+
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+   .. tab:: {"tab_name": "Boundaries within polygon"}
+      Insert all  "Shoreline clipped Core Based Statistical Area (CBSA)" geometries into another table:
+
+      .. code-block:: postgresql
+
+          INSERT INTO <table_to_update> (cartodb_id, the_geom, name, the_geom_webmercator)
+          SELECT ROW_NUMBER() OVER () AS cartodb_id,
+                 the_geom,
+                 geom_refs,
+                 ST_TRANSFORM(the_geom, 3857) the_geom_webmercator
+          FROM OBS_GetBoundariesByGeometry(
+            ST_GeomFromText('POLYGON((-160.2 17.7,-160.2 65.7,-65.4 65.7,-65.4 17.7,-160.2 17.7))', 4326),
+            'us.census.tiger.cbsa_clipped'
+          )
+
+   .. tab:: {"tab_name": "Boundaries by identifier in another table"}
+
+      Update the boundaries in another table matching the table's ID column.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT <geo_id> AS id
+            FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_MakeEnvelope(-179, 89, 179, -89, 4326),
+              '[{"geom_id": "us.census.tiger.cbsa_clipped"}]'
+            ) meta
+          )
+          UPDATE <table_to_update> SET
+                the_geom = (data->0->>'value')::Geometry,
+                the_geom_webmercator = ST_Transform((data->0->>'value')::Geometry, 3857)
+          FROM OBS_GetData(
+                (SELECT Array_agg(id) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.<geo_id> = obs_data.id
+
+      Obtain boundaries matched to another table's ID column.
+
+      .. code-block:: postgresql
+
+          WITH ids AS (
+            SELECT ARRAY_AGG(<geo_id>) ids
+            FROM <table_with_ids>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_MakeEnvelope(-179, 89, 179, -89, 4326),
+              '[{"geom_id": "us.census.tiger.cbsa_clipped"}]'
+            ) meta
+          )
+          SELECT ROW_NUMBER() OVER () AS cartodb_id,
+                 data->0->>'geomref' as geomref,
+                 (data->0->>'value')::Geometry as the_geom,
+                 ST_Transform((data->0->>'value')::Geometry, 3857) AS the_geom_webmercator
+          FROM OBS_GetData((SELECT ids FROM ids), (SELECT meta FROM meta))
+
+
+
+
+
+
+
+
+
+Source
+~~~~~~
+    
+      * :ref:`us.census.tiger.tiger-source`
+    
+
+
+Time (default is latest)
+~~~~~~~~~~~~~~~~~~~~~~~~
+  
+      * 2015
+  
+
+
+License
+~~~~~~~
+    
+      * :ref:`tags.no-restrictions`
+    

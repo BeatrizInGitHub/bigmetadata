@@ -1,0 +1,268 @@
+.. _us.census.spielman_singleton_segments.X55:
+
+Spielman-Singleton Segments: 55 Clusters
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Sociodemographic classes from Spielman and Singleton 2015, 55 clusters
+
+
+  
+  * **Wealthy, Retired Mountains/Coasts**: 
+  
+  * **Lower Middle Income with higher rent burden**: 
+  
+  * **Rural families**: 
+  
+  * **High rise, dense urbanites**: 
+  
+  * **Urban - Inner city**: 
+  
+  * **Struggling lower middle class with rent burden**: 
+  
+  * **Predominantly black, high high school attainment, home owners**: 
+  
+  * **Rural, Bachelors or college degree, Rent owned mix**: 
+  
+  * **Older, middle income Native Americans once married and Educated**: 
+  
+  * **Long commuters White black mix**: 
+  
+  * **Retired Grandparents**: 
+  
+  * **White, Asian Mix Big City Burbs Dwellers**: 
+  
+  * **Younger, Long Commuter in dense neighborhood**: 
+  
+  * **Older Home owners with high income**: 
+  
+  * **Young, working class and rural**: 
+  
+  * **City Outskirt University Campuses**: 
+  
+  * **Relatively affordable, satisfied lower middle class**: 
+  
+  * **High school education Long Commuters, Black, White Hispanic mix**: 
+  
+  * **Suburban, Young and Low-income**: 
+  
+  * **Middle Class, Educated, Suburban, Mixed Race**: 
+  
+  * **White and minority mix multilingual, mixed income / education. Married**: 
+  
+  * **Low-Income with gentrification**: 
+  
+  * **Predominantly black renters, rent own mix**: 
+  
+  * **Hispanic Black mix multilingual, high poverty, renters, uses public transport**: 
+  
+  * **Suburban/Rural Satisfied, decently educated lower middle class**: 
+  
+  * **Younger, poorer,single parent family Native Americans**: 
+  
+  * **Rural,High School Education, Owns property**: 
+  
+  * **Low Income on Urban Periphery**: 
+  
+  * **Lower educational attainment, Homeowner, Low rent**: 
+  
+  * **City Center University Campuses**: 
+  
+  * **Renters within cities, mixed income areas, White/Hispanic mix, Unmarried**: 
+  
+  * **Young, City based renters in Sparse neighborhoods, Low poverty**: 
+  
+  * **Satisfied Lower Middle Income Higher Rent Costs**: 
+  
+  * **Works from home, Highly Educated, Super Wealthy**: 
+  
+  * **College towns**: 
+  
+  * **Asian Hispanic Mix, Mid income**: 
+  
+  * **Wealthy and Rural Living**: 
+  
+  * **Low rent in built up neighborhoods**: 
+  
+  * **Older white home owners, less comfortable financially**: 
+  
+  * **Older home owners, more financially comfortable, some diversity**: 
+  
+  * **Retirement Communitties**: 
+  
+  * **Bachelors degree Higher income Home Owners**: 
+  
+  * **Older, mixed race professionals**: 
+  
+  * **Wealthy city commuters**: 
+  
+  * **College town with poverty**: 
+  
+  * **Very wealthy, multiple million dollar homes**: 
+  
+  * **Bachelors degree Mid income With Mortgages**: 
+  
+  * **New Developments**: 
+  
+  * **Older home owners and very high income**: 
+  
+  * **low-income, urban, young, unmarried**: 
+  
+  * **Black and mixed community with rent burden**: 
+  
+  * **Wealthy Diverse Suburbanites On the Coasts**: 
+  
+  * **Low education, mainly suburban**: 
+  
+  * **Lower Middle Income with affordable housing**: 
+  
+  * **University campus wider area**: 
+  
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+
+
+   
+
+
+
+
+   .. tab:: {"tab_name": "Point"}
+
+      Update a field of a table with the value of "Spielman-Singleton Segments: 55 Clusters" for a point. The value will be from
+      the densest boundary with this measure.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.spielman_singleton_segments.X55"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Text
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain the value of "Spielman-Singleton Segments: 55 Clusters" for a point. The value will be from
+      the densest boundary with this measure.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_SetSRID(ST_Point(-73.9, 40.7), 4326) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.spielman_singleton_segments.X55"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Text AS x55
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+
+
+
+
+
+
+
+
+Boundaries
+~~~~~~~~~~
+
+.. raw:: html
+
+  <table border="1" class="docutils">
+  <thead valign="bottom">
+  <tr class="row-odd"><th class="head">Boundary</th>
+  <th class="head">Time (default is latest)</th>
+  </tr>
+  </thead>
+  <tbody valign="top">
+
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.census_tract`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2010 - 2014
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.census_tract_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2010 - 2014
+
+.. raw:: html
+
+  </td>
+
+  
+
+.. raw:: html
+
+  </tr>
+  </tbody>
+  </table>
+
+
+
+
+Related columns
+~~~~~~~~~~~~~~~
+    
+      * :ref:`None`
+    
+
+
+
+Source
+~~~~~~
+    
+      * Not available
+    
+
+
+
+License
+~~~~~~~
+    
+      * Not available
+    

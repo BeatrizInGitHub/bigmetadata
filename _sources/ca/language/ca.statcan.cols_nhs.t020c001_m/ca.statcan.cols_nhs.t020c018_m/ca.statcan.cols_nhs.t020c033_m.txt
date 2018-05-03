@@ -1,0 +1,299 @@
+.. _ca.statcan.cols_nhs.t020c033_m:
+
+Bulgarian (male)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+
+
+   
+   .. tab:: {"tab_name": "Per Non-Aboriginal languages (male)"}
+
+      Update a field of a table with an estimate of "Bulgarian (male)" per Non-Aboriginal languages (male) for a polygon
+      using a combination of weighting by area and Non-Aboriginal languages (male).
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "ca.statcan.cols_nhs.t020c033_m",
+              "denom_id": "ca.statcan.cols_nhs.t020c018_m",
+              "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Bulgarian (male)" per Non-Aboriginal languages (male) for a polygon
+      using a combination of weighting by area and Non-Aboriginal languages (male).
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(-79.379, 43.655), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "ca.statcan.cols_nhs.t020c033_m",
+               "denom_id": "ca.statcan.cols_nhs.t020c018_m",
+               "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS t020c033_m_rate_2011
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   
+
+
+
+
+   .. tab:: {"tab_name": "Per sq km"}
+
+      Update a field of a table with an estimate of "Bulgarian (male)" per square kilometer using area
+      weighted interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "ca.statcan.cols_nhs.t020c033_m",
+              "normalization": "areaNormalized"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Bulgarian (male)" per square kilometer using area
+      weighted interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(-79.379, 43.655), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "ca.statcan.cols_nhs.t020c033_m",
+               "normalization": "areaNormalized"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS t020c033_m_per_sq_km_2011
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   .. tab:: {"tab_name": "Raw count"}
+
+      Update a field of a table with an estimate of "Bulgarian (male)" for a polygon using area-weighted
+      interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "ca.statcan.cols_nhs.t020c033_m",
+              "normalization": "predenominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Bulgarian (male)" for a polygon using area-weighted
+      interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(-79.379, 43.655), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "ca.statcan.cols_nhs.t020c033_m",
+               "normalization": "predenominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS t020c033_m_2011
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+
+
+
+
+
+
+
+
+Boundaries
+~~~~~~~~~~
+
+.. raw:: html
+
+  <table border="1" class="docutils">
+  <thead valign="bottom">
+  <tr class="row-odd"><th class="head">Boundary</th>
+  <th class="head">Time (default is latest)</th>
+  </tr>
+  </thead>
+  <tbody valign="top">
+
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`ca.statcan.geo.cd_`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2011
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`ca.statcan.geo.cma`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2011
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`ca.statcan.geo.csd`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2011
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`ca.statcan.geo.pr_`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2011
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`ca.statcan.geo.ct_`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2011
+
+.. raw:: html
+
+  </td>
+
+  
+
+.. raw:: html
+
+  </tr>
+  </tbody>
+  </table>
+
+
+
+
+Related columns
+~~~~~~~~~~~~~~~
+    
+      * :ref:`ca.statcan.cols_nhs.t020c018_m`
+    
+
+
+
+Source
+~~~~~~
+    
+      * :ref:`ca.statcan.license.statcan-nhs-2011`
+    
+
+
+
+License
+~~~~~~~
+    
+      * :ref:`ca.statcan.license.statcan-license`
+    

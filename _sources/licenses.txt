@@ -1,0 +1,126 @@
+.. Licenses:
+
+Licenses
+==============================================================================
+
+.. contents::
+   :local:
+   :depth: 1
+
+
+
+.. _eu.eurostat.eurostat-license:
+
+Copyright European Union
+-------------------------------------------------------------------------------
+
+Reuse is authorised, provided the source is acknowledged.  Full information `here <https://ec.europa.eu/info/legal-notice_en#copyright-notice>`_
+
+
+
+.. _au.geo.au-datapacks-license:
+
+Creative Commons Attribution 2.5 Australia licence
+-------------------------------------------------------------------------------
+
+DataPacks is licenced under a `Creative Commons Attribution 2.5 Australia licence <https://creativecommons.org/licenses/by/2.5/au/>`_
+
+
+
+.. _eu.geo.eurographics-license:
+
+EuroGeographics Open Data Licence
+-------------------------------------------------------------------------------
+
+This product includes Intellectual Property from European National Mapping and Cadastral Authorities and is licensed on behalf of these by EuroGeographics. Original product is available for free at `www.eurogeographics.org <www.eurogeographics.org>`_ Terms of the licence available at `http://www.eurogeographics.org/form/topographic-data-eurogeographics <http://www.eurogeographics.org/form/topographic-data-eurogeographics>`_
+
+
+
+.. _mx.inegi_columns.inegi-license:
+
+Free use of information from INEGI
+-------------------------------------------------------------------------------
+
+Terms of free use can be read in detail `here <http://www.beta.inegi.org.mx/contenidos/inegi/doc/terminos_info.pdf>`_.
+
+
+
+.. _fr.insee.insee-license:
+
+INSEE Copyright
+-------------------------------------------------------------------------------
+
+Commercial reuse permissible, more details `here <http://www.insee.fr/en/service/default.asp?page=rediffusion/copyright.htm>`_.
+
+
+
+.. _br.data.ibge-license:
+
+Law No. 12,527, OF November 18, 2011
+-------------------------------------------------------------------------------
+
+Full text is `here <http://www.planalto.gov.br/ccivil_03/_Ato2011-2014/2011/Lei/L12527.htm>`_
+
+
+
+.. _es.cnig.cnig-license:
+
+License of CNIG
+-------------------------------------------------------------------------------
+
+Royal Decree 663/2007, more information `here <https://www.cnig.es/propiedadIntelectual.do>`_.
+
+
+
+.. _es.ine.ine-license:
+
+National Statistics Institute (INE)
+-------------------------------------------------------------------------------
+
+`INE website <http://www.ine.es>`_
+
+
+
+.. _uk.cdrc.opengeodemographics-license:
+
+Open Geodemographics license
+-------------------------------------------------------------------------------
+
+Free to download and reuse, even for commercial sector applications.  More information `here <http://www.opengeodemographics.com/index.php#why-section>`_
+
+
+
+.. _ca.statcan.license.statcan-license:
+
+Statistics Canada Open Licence Agreement
+-------------------------------------------------------------------------------
+
+Further details `here <http://www.statcan.gc.ca/eng/reference/licence>`_
+
+
+
+.. _tags.uk_ogl:
+
+UK Open Government Licence (OGL)
+-------------------------------------------------------------------------------
+
+The Licensor grants you a worldwide, royalty-free, perpetual, non-exclusive licence to use the Information subject to the conditions `here <http://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/>`_.
+
+
+
+.. _tags.no-restrictions:
+
+Unrestricted
+-------------------------------------------------------------------------------
+
+You may do whatever you want with this information
+
+
+
+.. _us.zillow.zillow-license:
+
+Zillow Terms of Use for "Aggregate Data"
+-------------------------------------------------------------------------------
+
+May be used for non-personal uses, e.g., real estate market analysis. More information `here <http://www.zillow.com/corp/Terms.htm>`_
+

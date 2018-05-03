@@ -1,0 +1,105 @@
+.. _us.census.tiger.puma:
+
+US Census Public Use Microdata Areas
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PUMAs are geographic areas for which the Census Bureau provides selected extracts of raw data from a small sample of census records that are screened to protect confidentiality. These extracts are referred to as public use microdata sample (PUMS) files.
+
+For the 2010 Census, each state, the District of Columbia, Puerto Rico, and some Island Area participants delineated PUMAs for use in presenting PUMS data based on a 5 percent sample of decennial census or American Community Survey data. These areas are required to contain at least 100,000 people. This is different from Census 2000 when two types of PUMAs were defined: a 5 percent PUMA as for 2010 and an additional super-PUMA designed to provide a 1 percent sample. The PUMAs are identified by a five-digit census code unique within state.
+
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+   .. tab:: {"tab_name": "Boundaries within polygon"}
+      Insert all  "US Census Public Use Microdata Areas" geometries into another table:
+
+      .. code-block:: postgresql
+
+          INSERT INTO <table_to_update> (cartodb_id, the_geom, name, the_geom_webmercator)
+          SELECT ROW_NUMBER() OVER () AS cartodb_id,
+                 the_geom,
+                 geom_refs,
+                 ST_TRANSFORM(the_geom, 3857) the_geom_webmercator
+          FROM OBS_GetBoundariesByGeometry(
+            ST_GeomFromText('POLYGON((-179.4 12.9,-179.4 71.7,179.999 71.7,179.999 12.9,-179.4 12.9))', 4326),
+            'us.census.tiger.puma'
+          )
+
+   .. tab:: {"tab_name": "Boundaries by identifier in another table"}
+
+      Update the boundaries in another table matching the table's ID column.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT <geo_id> AS id
+            FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_MakeEnvelope(-179, 89, 179, -89, 4326),
+              '[{"geom_id": "us.census.tiger.puma"}]'
+            ) meta
+          )
+          UPDATE <table_to_update> SET
+                the_geom = (data->0->>'value')::Geometry,
+                the_geom_webmercator = ST_Transform((data->0->>'value')::Geometry, 3857)
+          FROM OBS_GetData(
+                (SELECT Array_agg(id) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.<geo_id> = obs_data.id
+
+      Obtain boundaries matched to another table's ID column.
+
+      .. code-block:: postgresql
+
+          WITH ids AS (
+            SELECT ARRAY_AGG(<geo_id>) ids
+            FROM <table_with_ids>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_MakeEnvelope(-179, 89, 179, -89, 4326),
+              '[{"geom_id": "us.census.tiger.puma"}]'
+            ) meta
+          )
+          SELECT ROW_NUMBER() OVER () AS cartodb_id,
+                 data->0->>'geomref' as geomref,
+                 (data->0->>'value')::Geometry as the_geom,
+                 ST_Transform((data->0->>'value')::Geometry, 3857) AS the_geom_webmercator
+          FROM OBS_GetData((SELECT ids FROM ids), (SELECT meta FROM meta))
+
+
+
+
+
+
+
+
+
+Source
+~~~~~~
+    
+      * :ref:`us.census.tiger.tiger-source`
+    
+
+
+Time (default is latest)
+~~~~~~~~~~~~~~~~~~~~~~~~
+  
+      * 2015
+  
+
+
+License
+~~~~~~~
+    
+      * :ref:`tags.no-restrictions`
+    

@@ -1,0 +1,105 @@
+.. _us.census.tiger.block_group:
+
+US Census Block Groups
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Block groups (BGs) are statistical divisions of census tracts, are generally defined to contain between 600 and 3,000 people, and are used to present data and control block numbering. A block group consists of clusters of blocks within the same census tract that have the same first digit of their four-digit census block number. For example, blocks 3001, 3002, 3003, ..., 3999 in census tract 1210.02 belong to BG 3 in that census tract. Most BGs were delineated by local participants in the Census Bureau’s Participant Statistical Areas Program. The Census Bureau delineated BGs only where a local or tribal government declined to participate, and a regional organization or State Data Center was not available to participate.
+
+A BG usually covers a contiguous area. Each census tract contains at least one BG, and BGs are uniquely numbered within the census tract. Within the standard census geographic hierarchy, BGs never cross state, county, or census tract boundaries but may cross the boundaries of any other geographic entity. Tribal census tracts and tribal BGs are separate and unique geographic areas defined within federally recognized American Indian reservations and can cross state and county boundaries (see “Tribal Census Tract” and “Tribal Block Group”). The tribal census tracts and tribal block groups may be completely different from the census tracts and block groups defined by state and county.
+
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+   .. tab:: {"tab_name": "Boundaries within polygon"}
+      Insert all  "US Census Block Groups" geometries into another table:
+
+      .. code-block:: postgresql
+
+          INSERT INTO <table_to_update> (cartodb_id, the_geom, name, the_geom_webmercator)
+          SELECT ROW_NUMBER() OVER () AS cartodb_id,
+                 the_geom,
+                 geom_refs,
+                 ST_TRANSFORM(the_geom, 3857) the_geom_webmercator
+          FROM OBS_GetBoundariesByGeometry(
+            ST_GeomFromText('POLYGON((-179.4 -15,-179.4 71.7,179.999 71.7,179.999 -15,-179.4 -15))', 4326),
+            'us.census.tiger.block_group'
+          )
+
+   .. tab:: {"tab_name": "Boundaries by identifier in another table"}
+
+      Update the boundaries in another table matching the table's ID column.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT <geo_id> AS id
+            FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_MakeEnvelope(-179, 89, 179, -89, 4326),
+              '[{"geom_id": "us.census.tiger.block_group"}]'
+            ) meta
+          )
+          UPDATE <table_to_update> SET
+                the_geom = (data->0->>'value')::Geometry,
+                the_geom_webmercator = ST_Transform((data->0->>'value')::Geometry, 3857)
+          FROM OBS_GetData(
+                (SELECT Array_agg(id) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.<geo_id> = obs_data.id
+
+      Obtain boundaries matched to another table's ID column.
+
+      .. code-block:: postgresql
+
+          WITH ids AS (
+            SELECT ARRAY_AGG(<geo_id>) ids
+            FROM <table_with_ids>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_MakeEnvelope(-179, 89, 179, -89, 4326),
+              '[{"geom_id": "us.census.tiger.block_group"}]'
+            ) meta
+          )
+          SELECT ROW_NUMBER() OVER () AS cartodb_id,
+                 data->0->>'geomref' as geomref,
+                 (data->0->>'value')::Geometry as the_geom,
+                 ST_Transform((data->0->>'value')::Geometry, 3857) AS the_geom_webmercator
+          FROM OBS_GetData((SELECT ids FROM ids), (SELECT meta FROM meta))
+
+
+
+
+
+
+
+
+
+Source
+~~~~~~
+    
+      * :ref:`us.census.tiger.tiger-source`
+    
+
+
+Time (default is latest)
+~~~~~~~~~~~~~~~~~~~~~~~~
+  
+      * 2015
+  
+
+
+License
+~~~~~~~
+    
+      * :ref:`tags.no-restrictions`
+    

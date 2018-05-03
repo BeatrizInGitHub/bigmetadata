@@ -1,0 +1,278 @@
+.. _eu.eurostat.demo_r_d2_janunk_nr_f:
+
+Population on 1 January - Unknown, Females
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Population on 1 January - Unknown, Females
+
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+
+
+   
+   .. tab:: {"tab_name": "Per Population on 1 January - Total, Females"}
+
+      Update a field of a table with an estimate of "Population on 1 January - Unknown, Females" per Population on 1 January - Total, Females for a polygon
+      using a combination of weighting by area and Population on 1 January - Total, Females.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_janunk_nr_f",
+              "denom_id": "eu.eurostat.demo_r_d2_jantotal_nr_f",
+              "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Population on 1 January - Unknown, Females" per Population on 1 January - Total, Females for a polygon
+      using a combination of weighting by area and Population on 1 January - Total, Females.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(13.406, 52.522), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_janunk_nr_f",
+               "denom_id": "eu.eurostat.demo_r_d2_jantotal_nr_f",
+               "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS demo_r_d2_janunk_nr_f_rate_2017
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   
+
+
+
+   
+   .. tab:: {"tab_name": "Per Population on 1 January - Unknown, Total"}
+
+      Update a field of a table with an estimate of "Population on 1 January - Unknown, Females" per Population on 1 January - Unknown, Total for a polygon
+      using a combination of weighting by area and Population on 1 January - Unknown, Total.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_janunk_nr_f",
+              "denom_id": "eu.eurostat.demo_r_d2_janunk_nr_t",
+              "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Population on 1 January - Unknown, Females" per Population on 1 January - Unknown, Total for a polygon
+      using a combination of weighting by area and Population on 1 January - Unknown, Total.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(13.406, 52.522), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_janunk_nr_f",
+               "denom_id": "eu.eurostat.demo_r_d2_janunk_nr_t",
+               "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS demo_r_d2_janunk_nr_f_rate_2017
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   
+
+
+
+
+   .. tab:: {"tab_name": "Per sq km"}
+
+      Update a field of a table with an estimate of "Population on 1 January - Unknown, Females" per square kilometer using area
+      weighted interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_janunk_nr_f",
+              "normalization": "areaNormalized"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Population on 1 January - Unknown, Females" per square kilometer using area
+      weighted interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(13.406, 52.522), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_janunk_nr_f",
+               "normalization": "areaNormalized"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS demo_r_d2_janunk_nr_f_per_sq_km_2017
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   .. tab:: {"tab_name": "Raw count"}
+
+      Update a field of a table with an estimate of "Population on 1 January - Unknown, Females" for a polygon using area-weighted
+      interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_janunk_nr_f",
+              "normalization": "predenominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Population on 1 January - Unknown, Females" for a polygon using area-weighted
+      interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(13.406, 52.522), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_janunk_nr_f",
+               "normalization": "predenominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS demo_r_d2_janunk_nr_f_2017
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+
+
+
+
+
+
+
+
+Boundaries
+~~~~~~~~~~
+
+.. raw:: html
+
+  <table border="1" class="docutils">
+  <thead valign="bottom">
+  <tr class="row-odd"><th class="head">Boundary</th>
+  <th class="head">Time (default is latest)</th>
+  </tr>
+  </thead>
+  <tbody valign="top">
+
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`eu.geo.nuts2`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2017
+
+.. raw:: html
+
+  </td>
+
+  
+
+.. raw:: html
+
+  </tr>
+  </tbody>
+  </table>
+
+
+
+
+Related columns
+~~~~~~~~~~~~~~~
+    
+      * :ref:`eu.eurostat.demo_r_d2_jantotal_nr_f`
+    
+      * :ref:`eu.eurostat.demo_r_d2_janunk_nr_t`
+    
+
+
+
+Source
+~~~~~~
+    
+      * :ref:`eu.eurostat.eurostat-source`
+    
+
+
+
+License
+~~~~~~~
+    
+      * :ref:`eu.eurostat.eurostat-license`
+    

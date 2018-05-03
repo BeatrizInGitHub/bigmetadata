@@ -1,0 +1,239 @@
+.. _eu.eurostat.demo_r_d2_jany1_nr_t:
+
+Population on 1 January - 1 year, Total (2 subcolumns)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Population on 1 January - 1 year, Total
+
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+
+
+   
+   .. tab:: {"tab_name": "Per Population on 1 January - Total, Total"}
+
+      Update a field of a table with an estimate of "Population on 1 January - 1 year, Total" per Population on 1 January - Total, Total for a polygon
+      using a combination of weighting by area and Population on 1 January - Total, Total.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_jany1_nr_t",
+              "denom_id": "eu.eurostat.demo_r_d2_jantotal_nr_t",
+              "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Population on 1 January - 1 year, Total" per Population on 1 January - Total, Total for a polygon
+      using a combination of weighting by area and Population on 1 January - Total, Total.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(13.406, 52.522), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_jany1_nr_t",
+               "denom_id": "eu.eurostat.demo_r_d2_jantotal_nr_t",
+               "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS demo_r_d2_jany1_nr_t_rate_2017
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   
+
+
+
+
+   .. tab:: {"tab_name": "Per sq km"}
+
+      Update a field of a table with an estimate of "Population on 1 January - 1 year, Total" per square kilometer using area
+      weighted interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_jany1_nr_t",
+              "normalization": "areaNormalized"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Population on 1 January - 1 year, Total" per square kilometer using area
+      weighted interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(13.406, 52.522), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_jany1_nr_t",
+               "normalization": "areaNormalized"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS demo_r_d2_jany1_nr_t_per_sq_km_2017
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   .. tab:: {"tab_name": "Raw count"}
+
+      Update a field of a table with an estimate of "Population on 1 January - 1 year, Total" for a polygon using area-weighted
+      interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_jany1_nr_t",
+              "normalization": "predenominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Population on 1 January - 1 year, Total" for a polygon using area-weighted
+      interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(13.406, 52.522), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "eu.eurostat.demo_r_d2_jany1_nr_t",
+               "normalization": "predenominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS demo_r_d2_jany1_nr_t_2017
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+
+
+
+
+
+
+Subcolumns
+~~~~~~~~~~
+
+.. toctree::
+   :maxdepth: 1
+   :titlesonly:
+   :glob:
+
+   eu.eurostat.demo_r_d2_jany1_nr_t/*
+
+
+
+
+
+Boundaries
+~~~~~~~~~~
+
+.. raw:: html
+
+  <table border="1" class="docutils">
+  <thead valign="bottom">
+  <tr class="row-odd"><th class="head">Boundary</th>
+  <th class="head">Time (default is latest)</th>
+  </tr>
+  </thead>
+  <tbody valign="top">
+
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`eu.geo.nuts2`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2017
+
+.. raw:: html
+
+  </td>
+
+  
+
+.. raw:: html
+
+  </tr>
+  </tbody>
+  </table>
+
+
+
+
+Related columns
+~~~~~~~~~~~~~~~
+    
+      * :ref:`eu.eurostat.demo_r_d2_jantotal_nr_t`
+    
+
+
+
+Source
+~~~~~~
+    
+      * :ref:`eu.eurostat.eurostat-source`
+    
+
+
+
+License
+~~~~~~~
+    
+      * :ref:`eu.eurostat.eurostat-license`
+    

@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Filhos do responsável e do cônjuge com 21 anos de idade &mdash; observatory 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/sphinx_tabs/tabs.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/sphinx_tabs/semantic-ui-2.2.7/segment.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/sphinx_tabs/semantic-ui-2.2.7/menu.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/sphinx_tabs/semantic-ui-2.2.7/tab.min.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/sphinx_tabs/tabs.js"></script>
+    <script type="text/javascript" src="../../../_static/sphinx_tabs/semantic-ui-2.2.7/tab.min.js"></script>
+    <link rel="top" title="observatory 0.0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Filhos(as) do responsável e do cônjuge com 21 anos de idade (2 subcolumns)" href="../br.data.Pessoa07_V022.html" />
+    <link rel="next" title="Filhas do responsável e do cônjuge com 21 anos de idade" href="br.data.Pessoa08_V124.html" />
+    <link rel="prev" title="Filhos(as) do responsável e do cônjuge com 21 anos de idade (2 subcolumns)" href="../br.data.Pessoa07_V022.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="filhos-do-responsavel-e-do-conjuge-com-21-anos-de-idade">
+<span id="br-data-pessoa07-v175"></span><h1>Filhos do responsável e do cônjuge com 21 anos de idade<a class="headerlink" href="#filhos-do-responsavel-e-do-conjuge-com-21-anos-de-idade" title="Permalink to this headline">¶</a></h1>
+<div class="sphinx-tabs docutils container">
+<div class="ui top attached tabular menu sphinx-menu docutils container">
+<div class="active item sphinx-data-tab-0 docutils container">
+Per Filhos(as) do responsável e do cônjuge com 21 anos de idade</div>
+<div class="item sphinx-data-tab-1 docutils container">
+Per sq km</div>
+<div class="item sphinx-data-tab-2 docutils container">
+Raw count</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-0 active docutils container">
+<p>Update a field of a table with an estimate of &#8220;Filhos do responsável e do cônjuge com 21 anos de idade&#8221; per Filhos(as) do responsável e do cônjuge com 21 anos de idade for a polygon
+using a combination of weighting by area and Filhos(as) do responsável e do cônjuge com 21 anos de idade.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">cartodb_id</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span> <span class="n">the_geom</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Pessoa07_V175&quot;,</span>
+<span class="s1">    &quot;denom_id&quot;: &quot;br.data.Pessoa07_V022&quot;,</span>
+<span class="s1">    &quot;normalization&quot;: &quot;denominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">UPDATE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="o">&lt;</span><span class="n">field_to_update</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span> <span class="n">obs_data</span>
+<span class="k">WHERE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span><span class="mf">.</span><span class="n">cartodb_id</span> <span class="o">=</span> <span class="n">obs_data</span><span class="mf">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Obtain an estimate of &#8220;Filhos do responsável e do cônjuge com 21 anos de idade&#8221; per Filhos(as) do responsável e do cônjuge com 21 anos de idade for a polygon
+using a combination of weighting by area and Filhos(as) do responsável e do cônjuge com 21 anos de idade.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="mf">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span>
+  <span class="n">ST_Buffer</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Point</span><span class="p">(</span><span class="o">-</span><span class="mf">22.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">43.19</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span> <span class="n">the_geom</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Pessoa07_V175&quot;,</span>
+<span class="s1">     &quot;denom_id&quot;: &quot;br.data.Pessoa07_V022&quot;,</span>
+<span class="s1">     &quot;normalization&quot;: &quot;denominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span> <span class="k">AS</span> <span class="n">pessoa07_v175_rate_2010</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-1 docutils container">
+<p>Update a field of a table with an estimate of &#8220;Filhos do responsável e do cônjuge com 21 anos de idade&#8221; per square kilometer using area
+weighted interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">cartodb_id</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span> <span class="n">the_geom</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Pessoa07_V175&quot;,</span>
+<span class="s1">    &quot;normalization&quot;: &quot;areaNormalized&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">UPDATE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="o">&lt;</span><span class="n">field_to_update</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span> <span class="n">obs_data</span>
+<span class="k">WHERE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span><span class="mf">.</span><span class="n">cartodb_id</span> <span class="o">=</span> <span class="n">obs_data</span><span class="mf">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Obtain an estimate of &#8220;Filhos do responsável e do cônjuge com 21 anos de idade&#8221; per square kilometer using area
+weighted interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="mf">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span>
+  <span class="n">ST_Buffer</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Point</span><span class="p">(</span><span class="o">-</span><span class="mf">22.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">43.19</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span> <span class="n">the_geom</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Pessoa07_V175&quot;,</span>
+<span class="s1">     &quot;normalization&quot;: &quot;areaNormalized&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span> <span class="k">AS</span> <span class="n">pessoa07_v175_per_sq_km_2010</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-2 docutils container">
+<p>Update a field of a table with an estimate of &#8220;Filhos do responsável e do cônjuge com 21 anos de idade&#8221; for a polygon using area-weighted
+interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">cartodb_id</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span> <span class="n">the_geom</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Pessoa07_V175&quot;,</span>
+<span class="s1">    &quot;normalization&quot;: &quot;predenominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">UPDATE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="o">&lt;</span><span class="n">field_to_update</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span> <span class="n">obs_data</span>
+<span class="k">WHERE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span><span class="mf">.</span><span class="n">cartodb_id</span> <span class="o">=</span> <span class="n">obs_data</span><span class="mf">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Obtain an estimate of &#8220;Filhos do responsável e do cônjuge com 21 anos de idade&#8221; for a polygon using area-weighted
+interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="mf">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span>
+  <span class="n">ST_Buffer</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Point</span><span class="p">(</span><span class="o">-</span><span class="mf">22.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">43.19</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span> <span class="n">the_geom</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Pessoa07_V175&quot;,</span>
+<span class="s1">     &quot;normalization&quot;: &quot;predenominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span> <span class="k">AS</span> <span class="n">pessoa07_v175_2010</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="boundaries">
+<h2>Boundaries<a class="headerlink" href="#boundaries" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Boundary</th>
+<th class="head">Time (default is latest)</th>
+</tr>
+</thead>
+<tbody valign="top"><tr class="row-even"><td><p><a class="reference internal" href="../../boundary/br.geo.setores_censitarios.html#br-geo-setores-censitarios"><span class="std std-ref">Census tracts</span></a></p>
+</td>
+<td><p>2010</p>
+</td></tr>
+</tbody>
+</table></div>
+<div class="section" id="related-columns">
+<h2>Related columns<a class="headerlink" href="#related-columns" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../../families/br.data.Pessoa07_V022.html#br-data-pessoa07-v022"><span class="std std-ref">Filhos(as) do responsável e do cônjuge com 21 anos de idade (2 subcolumns)</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="source">
+<h2>Source<a class="headerlink" href="#source" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../../../sources.html#br-data-ibge-censo"><span class="std std-ref">Censo Demográfico Instituto Brasileiro de Geografia e Estatística (IBGE)</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../../../licenses.html#br-data-ibge-license"><span class="std std-ref">Law No. 12,527, OF November 18, 2011</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Filhos do responsável e do cônjuge com 21 anos de idade</a><ul>
+<li><a class="reference internal" href="#boundaries">Boundaries</a></li>
+<li><a class="reference internal" href="#related-columns">Related columns</a></li>
+<li><a class="reference internal" href="#source">Source</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../br.html">Brazil</a><ul>
+  <li><a href="../../age_gender.html">Age and Gender</a><ul>
+  <li><a href="../br.data.Pessoa07_V022.html">Filhos(as) do responsável e do cônjuge com 21 anos de idade (2 subcolumns)</a><ul>
+      <li>Previous: <a href="../br.data.Pessoa07_V022.html" title="previous chapter">Filhos(as) do responsável e do cônjuge com 21 anos de idade (2 subcolumns)</a></li>
+      <li>Next: <a href="br.data.Pessoa08_V124.html" title="next chapter">Filhas do responsável e do cônjuge com 21 anos de idade</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/br/age_gender/br.data.Pessoa07_V022/br.data.Pessoa07_V175.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, CARTO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../../../_sources/br/age_gender/br.data.Pessoa07_V022/br.data.Pessoa07_V175.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

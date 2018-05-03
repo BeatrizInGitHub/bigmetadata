@@ -1,0 +1,540 @@
+.. _us.census.acs.B23025005:
+
+Unemployed Population
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+The number of civilians in each geography who are 16 years old and over are classified as unemployed if they (1) were neither "at work" nor "with a job but not at work" during the reference week, and (2) were actively looking for work during the last 4 weeks, and (3) were available to start a job. Also included as unemployed are civilians who did not work at all during the reference week, were waiting to be called back to a job from which they had been laid off, and were available for work except for temporary illness. Examples of job seeking activities are:
+              * Registering at a public or private employment office
+              * Meeting with prospective employers
+              * Investigating possibilities for starting a professional
+                practice or opening a business
+              * Placing or answering advertisements
+              * Writing letters of application
+              * Being on a union or professional register
+
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+
+
+   
+   .. tab:: {"tab_name": "Per Population in Civilian Labor Force"}
+
+      Update a field of a table with an estimate of "Unemployed Population" per Population in Civilian Labor Force for a polygon
+      using a combination of weighting by area and Population in Civilian Labor Force.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.acs.B23025005",
+              "denom_id": "us.census.acs.B23025003",
+              "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Unemployed Population" per Population in Civilian Labor Force for a polygon
+      using a combination of weighting by area and Population in Civilian Labor Force.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(-73.9, 40.7), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.acs.B23025005",
+               "denom_id": "us.census.acs.B23025003",
+               "normalization": "denominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS unemployed_pop_rate_2015_2015
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   
+
+
+
+
+   .. tab:: {"tab_name": "Per sq km"}
+
+      Update a field of a table with an estimate of "Unemployed Population" per square kilometer using area
+      weighted interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.acs.B23025005",
+              "normalization": "areaNormalized"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Unemployed Population" per square kilometer using area
+      weighted interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(-73.9, 40.7), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.acs.B23025005",
+               "normalization": "areaNormalized"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS unemployed_pop_per_sq_km_2015_2015
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+   .. tab:: {"tab_name": "Raw count"}
+
+      Update a field of a table with an estimate of "Unemployed Population" for a polygon using area-weighted
+      interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.acs.B23025005",
+              "normalization": "predenominated"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Numeric
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain an estimate of "Unemployed Population" for a polygon using area-weighted
+      interpolation.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_Buffer(ST_SetSRID(ST_Point(-73.9, 40.7), 4326), 0.01) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.acs.B23025005",
+               "normalization": "predenominated"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Numeric AS unemployed_pop_2015_2015
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+
+
+
+
+
+
+
+
+Boundaries
+~~~~~~~~~~
+
+.. raw:: html
+
+  <table border="1" class="docutils">
+  <thead valign="bottom">
+  <tr class="row-odd"><th class="head">Boundary</th>
+  <th class="head">Time (default is latest)</th>
+  </tr>
+  </thead>
+  <tbody valign="top">
+
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.school_district_secondary`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.state_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.puma_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.county`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.school_district_elementary`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.school_district_elementary_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.place_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.congressional_district`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.place`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.congressional_district_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.school_district_unified_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.puma`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.cbsa`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.cbsa_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.county_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.state`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.school_district_secondary_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.school_district_unified`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2015 - 2015
+
+.. raw:: html
+
+  </td>
+
+  
+
+.. raw:: html
+
+  </tr>
+  </tbody>
+  </table>
+
+
+
+
+Related columns
+~~~~~~~~~~~~~~~
+    
+      * :ref:`us.census.acs.B23025003`
+    
+
+
+
+Source
+~~~~~~
+    
+      * :ref:`us.census.acs.acs`
+    
+
+
+
+License
+~~~~~~~
+    
+      * :ref:`tags.no-restrictions`
+    

@@ -1,0 +1,11 @@
+.. United Kingdom
+
+United Kingdom
+==============================================================================
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+   :glob:
+
+   uk/*

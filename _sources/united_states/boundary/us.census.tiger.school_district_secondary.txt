@@ -1,0 +1,109 @@
+.. _us.census.tiger.school_district_secondary:
+
+Secondary School District
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+School Districts are geographic entities within which state, county, local officials, the Bureau of Indian Affairs, or the U.S. Department of Defense provide public educational services for the area’s residents. The Census Bureau obtains the boundaries, names, local education agency codes, and school district levels for school districts from state and local school officials for the primary purpose of providing the U.S. Department of Education with estimates of the number of children “at risk” within each school district, county, and state. This information serves as the basis for the Department of Education to determine the annual allocation of Title I funding to states and school districts.
+
+The Census Bureau tabulates data for three types of school districts: elementary, secondary, and unified. Each school district is assigned a five-digit code that is unique within state. School district codes are the local education agency number assigned by the Department of Education and are not necessarily in alphabetical order by school district name.
+
+The elementary school districts provide education to the lower grade/age levels and the secondary school districts provide education to the upper grade/age levels. Unified school districts provide education to children of all school ages in their service areas. In general, where there is a unified school district, no elementary or secondary school district exists; and where there is an elementary school district, the secondary school district may or may not exist.
+
+The Census Bureau’s representation of school districts in various data products is based both on the grade range that a school district operates and also the grade range for which the school district is financially responsible. For example, a school district is defined as an elementary school district if its operational grade range is less than the full kindergarten through 12 or prekindergarten through 12 grade range (for example, K–6 or pre-K–8). These elementary school districts do not provide direct educational services for grades 7–12, 9–12, or similar ranges. Some elementary school districts are financially responsible for the education of all school-aged children within their service areas and rely on other school districts to provide service for those grade ranges that are not operated by these elementary school districts. In these situations, in order to allocate all school-aged children to these school districts, the secondary school district code field is blank. For elementary school districts where the operational grade range and financially responsible grade range are the same, the secondary school district code field will contain a secondary school district code. There are no situations where an elementary school district does not exist and a secondary school district exists in Census Bureau records.
+
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+   .. tab:: {"tab_name": "Boundaries within polygon"}
+      Insert all  "Secondary School District" geometries into another table:
+
+      .. code-block:: postgresql
+
+          INSERT INTO <table_to_update> (cartodb_id, the_geom, name, the_geom_webmercator)
+          SELECT ROW_NUMBER() OVER () AS cartodb_id,
+                 the_geom,
+                 geom_refs,
+                 ST_TRANSFORM(the_geom, 3857) the_geom_webmercator
+          FROM OBS_GetBoundariesByGeometry(
+            ST_GeomFromText('POLYGON((-124.5 30.9,-124.5 49.2,-67.2 49.2,-67.2 30.9,-124.5 30.9))', 4326),
+            'us.census.tiger.school_district_secondary'
+          )
+
+   .. tab:: {"tab_name": "Boundaries by identifier in another table"}
+
+      Update the boundaries in another table matching the table's ID column.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT <geo_id> AS id
+            FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_MakeEnvelope(-179, 89, 179, -89, 4326),
+              '[{"geom_id": "us.census.tiger.school_district_secondary"}]'
+            ) meta
+          )
+          UPDATE <table_to_update> SET
+                the_geom = (data->0->>'value')::Geometry,
+                the_geom_webmercator = ST_Transform((data->0->>'value')::Geometry, 3857)
+          FROM OBS_GetData(
+                (SELECT Array_agg(id) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.<geo_id> = obs_data.id
+
+      Obtain boundaries matched to another table's ID column.
+
+      .. code-block:: postgresql
+
+          WITH ids AS (
+            SELECT ARRAY_AGG(<geo_id>) ids
+            FROM <table_with_ids>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_MakeEnvelope(-179, 89, 179, -89, 4326),
+              '[{"geom_id": "us.census.tiger.school_district_secondary"}]'
+            ) meta
+          )
+          SELECT ROW_NUMBER() OVER () AS cartodb_id,
+                 data->0->>'geomref' as geomref,
+                 (data->0->>'value')::Geometry as the_geom,
+                 ST_Transform((data->0->>'value')::Geometry, 3857) AS the_geom_webmercator
+          FROM OBS_GetData((SELECT ids FROM ids), (SELECT meta FROM meta))
+
+
+
+
+
+
+
+
+
+Source
+~~~~~~
+    
+      * :ref:`us.census.tiger.tiger-source`
+    
+
+
+Time (default is latest)
+~~~~~~~~~~~~~~~~~~~~~~~~
+  
+      * 2015
+  
+
+
+License
+~~~~~~~
+    
+      * :ref:`tags.no-restrictions`
+    

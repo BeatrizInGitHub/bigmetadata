@@ -1,0 +1,292 @@
+.. _uk.cdrc.subgrp:
+
+Subgroup Area Classification
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+The 2011 Area Classification for Output Areas (2011 OAC) is a UK geodemographic classification produced as a collaboration between the Office for National Statistics and University College London. Visit `here <http://www.ons.gov.uk/ons/guide-method/geography/products/area-classifications/ns-area-classifications/ns-2011-area-classifications/index.html>`_ or `here <http://www.opengeodemographics.com>`_ for further information regarding the 2011 OAC. 
+
+
+  
+  * **Ageing Industrious Workers**: 
+  
+  * **Asian Terraces and Flats**: 
+  
+  * **Highly-Qualified Quaternary Workers**: 
+  
+  * **Ageing Rural Industry Workers**: 
+  
+  * **Established Farming Communities**: 
+  
+  * **Old EU Tech Workers**: 
+  
+  * **Transitional Eastern European Neighbourhoods**: 
+  
+  * **Established Tech Workers**: 
+  
+  * **Families in Terraces and Flats**: 
+  
+  * **Retired City Hardship**: 
+  
+  * **Social Renting Young Families**: 
+  
+  * **Deprived Neighbourhoods**: 
+  
+  * **Self-Sufficient Retirement**: 
+  
+  * **Multi-Ethnic Professional Service Workers**: 
+  
+  * **Industrious Transitions**: 
+  
+  * **Ageing in Suburbia**: 
+  
+  * **Challenged Transitionaries**: 
+  
+  * **Retired Independent City Dwellers**: 
+  
+  * **Student Digs**: 
+  
+  * **Rural Workers and Families**: 
+  
+  * **Constrained Neighbourhoods**: 
+  
+  * **Detached Retirement Living**: 
+  
+  * **Agricultural Communities**: 
+  
+  * **Constrained Commuters**: 
+  
+  * **Inner City Ethnic Mix**: 
+  
+  * **Eastern European Communities**: 
+  
+  * **Hard-Pressed Ethnic Mix**: 
+  
+  * **Professional Service Cosmopolitans**: 
+  
+  * **Indian Tech Achievers**: 
+  
+  * **Constrained Young Families**: 
+  
+  * **Urban Cultural Mix**: 
+  
+  * **Young Hard-Pressed Families**: 
+  
+  * **Private Renting New Arrivals**: 
+  
+  * **Renting Rural Retirement**: 
+  
+  * **Industrious Hardship**: 
+  
+  * **Hard-Pressed European Settlers**: 
+  
+  * **Young Families and Students**: 
+  
+  * **Hard-Pressed Rented Terraces**: 
+  
+  * **EU White-Collar Workers**: 
+  
+  * **White Suburban Communities**: 
+  
+  * **Older Farming Communities**: 
+  
+  * **Ageing Rural Flat Tenants**: 
+  
+  * **Migrant Commuters**: 
+  
+  * **Students and Professionals**: 
+  
+  * **Multicultural Student Neighbourhoods**: 
+  
+  * **Bangladeshi Mixed Employment**: 
+  
+  * **Renting Hard-Pressed Workers**: 
+  
+  * **Student Communal Living**: 
+  
+  * **Retired Communal City Dwellers**: 
+  
+  * **Hampered Aspiration**: 
+  
+  * **Communal Retirement**: 
+  
+  * **Established Renting Families**: 
+  
+  * **Deprived Blue-Collar Terraces**: 
+  
+  * **Multi-Ethnic Hardship**: 
+  
+  * **Multicultural New Arrivals**: 
+  
+  * **Endeavouring Flat Dwellers**: 
+  
+  * **Multi-Ethnic Suburbia**: 
+  
+  * **Semi-Detached Ageing**: 
+  
+  * **Comfortable Suburbia**: 
+  
+  * **Achieving Minorities**: 
+  
+  * **White Professionals**: 
+  
+  * **Students and Commuters**: 
+  
+  * **Pakistani Communities**: 
+  
+  * **Older Workers and Retirement**: 
+  
+  * **Migrant Families**: 
+  
+  * **Commuters with Young Families**: 
+  
+  * **Striving Service Workers**: 
+  
+  * **Delayed Retirement**: 
+  
+  * **Rural White-Collar Workers**: 
+  
+  * **New EU Tech Workers**: 
+  
+  * **Multi-Ethnic Professionals with Families**: 
+  
+  * **Ageing Communities and Families**: 
+  
+  * **Rural Life**: 
+  
+  * **Outer City Hardship**: 
+  
+  * **Rural Employment and Retirees**: 
+  
+  * **Detached Rural Retirement**: 
+  
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+
+
+   
+
+
+
+
+   .. tab:: {"tab_name": "Point"}
+
+      Update a field of a table with the value of "Subgroup Area Classification" for a point. The value will be from
+      the densest boundary with this measure.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "uk.cdrc.subgrp"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Text
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain the value of "Subgroup Area Classification" for a point. The value will be from
+      the densest boundary with this measure.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_SetSRID(ST_Point(-0.0888, 51.514), 4326) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "uk.cdrc.subgrp"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Text AS subgrp
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+
+
+
+
+
+
+
+
+Boundaries
+~~~~~~~~~~
+
+.. raw:: html
+
+  <table border="1" class="docutils">
+  <thead valign="bottom">
+  <tr class="row-odd"><th class="head">Boundary</th>
+  <th class="head">Time (default is latest)</th>
+  </tr>
+  </thead>
+  <tbody valign="top">
+
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`uk.cdrc.the_geom`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2011
+
+.. raw:: html
+
+  </td>
+
+  
+
+.. raw:: html
+
+  </tr>
+  </tbody>
+  </table>
+
+
+
+
+Related columns
+~~~~~~~~~~~~~~~
+    
+      * :ref:`None`
+    
+
+
+
+Source
+~~~~~~
+    
+      * :ref:`uk.cdrc.cdrc-source`
+    
+
+
+
+License
+~~~~~~~
+    
+      * :ref:`uk.cdrc.opengeodemographics-license`
+    

@@ -1,0 +1,891 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Moradores em domicílios particulares permanentes (640 subcolumns) &mdash; observatory 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/tabs.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/semantic-ui-2.2.7/segment.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/semantic-ui-2.2.7/menu.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/semantic-ui-2.2.7/tab.min.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/sphinx_tabs/tabs.js"></script>
+    <script type="text/javascript" src="../../_static/sphinx_tabs/semantic-ui-2.2.7/tab.min.js"></script>
+    <link rel="top" title="observatory 0.0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Housing" href="../housing.html" />
+    <link rel="next" title="Moradores em domicílios particulares permanentes próprios  Existe identificação do logradouro" href="br.data.Entorno03_V422/br.data.Entorno03_V423.html" />
+    <link rel="prev" title="Domicílios particulares permanentes com responsável do sexo feminino  Não existe lixo acumulado nos logradouros" href="br.data.Entorno01_V001/br.data.Entorno02_V421.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="moradores-em-domicilios-particulares-permanentes-640-subcolumns">
+<span id="br-data-entorno03-v422"></span><h1>Moradores em domicílios particulares permanentes (640 subcolumns)<a class="headerlink" href="#moradores-em-domicilios-particulares-permanentes-640-subcolumns" title="Permalink to this headline">¶</a></h1>
+<div class="sphinx-tabs docutils container">
+<div class="ui top attached tabular menu sphinx-menu docutils container">
+<div class="active item sphinx-data-tab-0 docutils container">
+Per sq km</div>
+<div class="item sphinx-data-tab-1 docutils container">
+Raw count</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-0 active docutils container">
+<p>Update a field of a table with an estimate of &#8220;Moradores em domicílios particulares permanentes&#8221; per square kilometer using area
+weighted interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">cartodb_id</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span> <span class="n">the_geom</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Entorno03_V422&quot;,</span>
+<span class="s1">    &quot;normalization&quot;: &quot;areaNormalized&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">UPDATE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="o">&lt;</span><span class="n">field_to_update</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span> <span class="n">obs_data</span>
+<span class="k">WHERE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span><span class="mf">.</span><span class="n">cartodb_id</span> <span class="o">=</span> <span class="n">obs_data</span><span class="mf">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Obtain an estimate of &#8220;Moradores em domicílios particulares permanentes&#8221; per square kilometer using area
+weighted interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="mf">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span>
+  <span class="n">ST_Buffer</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Point</span><span class="p">(</span><span class="o">-</span><span class="mf">22.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">43.19</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span> <span class="n">the_geom</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Entorno03_V422&quot;,</span>
+<span class="s1">     &quot;normalization&quot;: &quot;areaNormalized&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span> <span class="k">AS</span> <span class="n">entorno03_v422_per_sq_km_2010</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-1 docutils container">
+<p>Update a field of a table with an estimate of &#8220;Moradores em domicílios particulares permanentes&#8221; for a polygon using area-weighted
+interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">cartodb_id</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span> <span class="n">the_geom</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Entorno03_V422&quot;,</span>
+<span class="s1">    &quot;normalization&quot;: &quot;predenominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">UPDATE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="o">&lt;</span><span class="n">field_to_update</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span> <span class="n">obs_data</span>
+<span class="k">WHERE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span><span class="mf">.</span><span class="n">cartodb_id</span> <span class="o">=</span> <span class="n">obs_data</span><span class="mf">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Obtain an estimate of &#8220;Moradores em domicílios particulares permanentes&#8221; for a polygon using area-weighted
+interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="mf">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span>
+  <span class="n">ST_Buffer</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Point</span><span class="p">(</span><span class="o">-</span><span class="mf">22.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">43.19</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span> <span class="n">the_geom</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Entorno03_V422&quot;,</span>
+<span class="s1">     &quot;normalization&quot;: &quot;predenominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span> <span class="k">AS</span> <span class="n">entorno03_v422_2010</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="subcolumns">
+<h2>Subcolumns<a class="headerlink" href="#subcolumns" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V423.html">Moradores em domicílios particulares permanentes próprios  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V424.html">Moradores em domicílios particulares permanentes próprios  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V425.html">Moradores em domicílios particulares permanentes alugados  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V426.html">Moradores em domicílios particulares permanentes alugados  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V427.html">Moradores em domicílios particulares permanentes cedidos  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V428.html">Moradores em domicílios particulares permanentes cedidos  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V429.html">Moradores em domicílios particulares permanentes próprios  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V430.html">Moradores em domicílios particulares permanentes próprios  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V431.html">Moradores em domicílios particulares permanentes alugados  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V432.html">Moradores em domicílios particulares permanentes alugados  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V433.html">Moradores em domicílios particulares permanentes cedidos  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V434.html">Moradores em domicílios particulares permanentes cedidos  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V435.html">Moradores em domicílios particulares permanentes próprios  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V436.html">Moradores em domicílios particulares permanentes próprios  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V437.html">Moradores em domicílios particulares permanentes alugados  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V438.html">Moradores em domicílios particulares permanentes alugados  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V439.html">Moradores em domicílios particulares permanentes cedidos  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V440.html">Moradores em domicílios particulares permanentes cedidos  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V441.html">Moradores em domicílios particulares permanentes próprios  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V442.html">Moradores em domicílios particulares permanentes próprios  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V443.html">Moradores em domicílios particulares permanentes alugados  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V444.html">Moradores em domicílios particulares permanentes alugados  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V445.html">Moradores em domicílios particulares permanentes cedidos  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V446.html">Moradores em domicílios particulares permanentes cedidos  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V447.html">Moradores em domicílios particulares permanentes próprios  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V448.html">Moradores em domicílios particulares permanentes próprios  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V449.html">Moradores em domicílios particulares permanentes alugados  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V450.html">Moradores em domicílios particulares permanentes alugados  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V451.html">Moradores em domicílios particulares permanentes cedidos  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V452.html">Moradores em domicílios particulares permanentes cedidos  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V453.html">Moradores em domicílios particulares permanentes próprios  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V454.html">Moradores em domicílios particulares permanentes próprios  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V455.html">Moradores em domicílios particulares permanentes alugados  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V456.html">Moradores em domicílios particulares permanentes alugados  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V457.html">Moradores em domicílios particulares permanentes cedidos  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V458.html">Moradores em domicílios particulares permanentes cedidos  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V459.html">Moradores em domicílios particulares permanentes próprios  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V460.html">Moradores em domicílios particulares permanentes próprios  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V461.html">Moradores em domicílios particulares permanentes alugados  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V462.html">Moradores em domicílios particulares permanentes alugados  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V463.html">Moradores em domicílios particulares permanentes cedidos  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V464.html">Moradores em domicílios particulares permanentes cedidos  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V465.html">Moradores em domicílios particulares permanentes próprios  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V466.html">Moradores em domicílios particulares permanentes próprios  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V467.html">Moradores em domicílios particulares permanentes alugados  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V468.html">Moradores em domicílios particulares permanentes alugados  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V469.html">Moradores em domicílios particulares permanentes cedidos  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V470.html">Moradores em domicílios particulares permanentes cedidos  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V471.html">Moradores em domicílios particulares permanentes próprios  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V472.html">Moradores em domicílios particulares permanentes próprios  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V473.html">Moradores em domicílios particulares permanentes alugados  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V474.html">Moradores em domicílios particulares permanentes alugados  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V475.html">Moradores em domicílios particulares permanentes cedidos  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V476.html">Moradores em domicílios particulares permanentes cedidos  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V477.html">Moradores em domicílios particulares permanentes próprios  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V478.html">Moradores em domicílios particulares permanentes próprios  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V479.html">Moradores em domicílios particulares permanentes alugados  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V480.html">Moradores em domicílios particulares permanentes alugados  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V481.html">Moradores em domicílios particulares permanentes cedidos  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V482.html">Moradores em domicílios particulares permanentes cedidos  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V483.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V484.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V485.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V486.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V487.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V488.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V489.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V490.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V491.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V492.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V493.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V494.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V495.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V496.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V497.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V498.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V499.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V500.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V501.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V502.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V503.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V504.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V505.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V506.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V507.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V508.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V509.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V510.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V511.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V512.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V513.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V514.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V515.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V516.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V517.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V518.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V519.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V520.html">Moradores em domicílios particulares permanentes com rede geral de distribuição de água   Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V521.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V522.html">Moradores em domicílios particulares permanentes com poço ou nascente na propriedade  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V523.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V524.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V525.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V526.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V527.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V528.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V529.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V530.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V531.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V532.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V533.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V534.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V535.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V536.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V537.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V538.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V539.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V540.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V541.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V542.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V543.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V544.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V545.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V546.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V547.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V548.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V549.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V550.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V551.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V552.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V553.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V554.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V555.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V556.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V557.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V558.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V559.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V560.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V561.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V562.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V563.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V564.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V565.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V566.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V567.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V568.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V569.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V570.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V571.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V572.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V573.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V574.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V575.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V576.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V577.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V578.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário da rede geral de esgoto ou rede pluvial  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V579.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V580.html">Moradores em domicílios particulares permanentes que tinham banheiro ou sanitário e esgotamento sanitário de fossa séptica  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V581.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V582.html">Moradores em domicílios particulares permanentes que não tinham banheiro ou sanitário  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V583.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V584.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V585.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V586.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V587.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V588.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V589.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V590.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V591.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V592.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V593.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V594.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V595.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V596.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V597.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V598.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V599.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V600.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V601.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V602.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V603.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V604.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V605.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V606.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V607.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V608.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V609.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V610.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V611.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V612.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V613.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V614.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V615.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V616.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V617.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V618.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V619.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V620.html">Moradores em domicílios particulares permanentes com lixo coletado diretamente por serviço de limpeza  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V621.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno03_V622.html">Moradores em domicílios particulares permanentes com lixo depositado em caçamba de serviço de limpeza  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V623.html">Moradores em domicílios particulares permanentes com moradia adequada  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V624.html">Moradores em domicílios particulares permanentes com moradia adequada  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V625.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V626.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V627.html">Moradores em domicílios particulares permanentes com moradia inadequada  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V628.html">Moradores em domicílios particulares permanentes com moradia inadequada  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V629.html">Moradores em domicílios particulares permanentes com moradia adequada  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V630.html">Moradores em domicílios particulares permanentes com moradia adequada  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V631.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V632.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V633.html">Moradores em domicílios particulares permanentes com moradia inadequada  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V634.html">Moradores em domicílios particulares permanentes com moradia inadequada  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V635.html">Moradores em domicílios particulares permanentes com moradia adequada  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V636.html">Moradores em domicílios particulares permanentes com moradia adequada  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V637.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V638.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V639.html">Moradores em domicílios particulares permanentes com moradia inadequada  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V640.html">Moradores em domicílios particulares permanentes com moradia inadequada  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V641.html">Moradores em domicílios particulares permanentes com moradia adequada  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V642.html">Moradores em domicílios particulares permanentes com moradia adequada  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V643.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V644.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V645.html">Moradores em domicílios particulares permanentes com moradia inadequada  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V646.html">Moradores em domicílios particulares permanentes com moradia inadequada  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V647.html">Moradores em domicílios particulares permanentes com moradia adequada  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V648.html">Moradores em domicílios particulares permanentes com moradia adequada  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V649.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V650.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V651.html">Moradores em domicílios particulares permanentes com moradia inadequada  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V652.html">Moradores em domicílios particulares permanentes com moradia inadequada  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V653.html">Moradores em domicílios particulares permanentes com moradia adequada  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V654.html">Moradores em domicílios particulares permanentes com moradia adequada  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V655.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V656.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V657.html">Moradores em domicílios particulares permanentes com moradia inadequada  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V658.html">Moradores em domicílios particulares permanentes com moradia inadequada  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V659.html">Moradores em domicílios particulares permanentes com moradia adequada  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V660.html">Moradores em domicílios particulares permanentes com moradia adequada  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V661.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V662.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V663.html">Moradores em domicílios particulares permanentes com moradia inadequada  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V664.html">Moradores em domicílios particulares permanentes com moradia inadequada  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V665.html">Moradores em domicílios particulares permanentes com moradia adequada  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V666.html">Moradores em domicílios particulares permanentes com moradia adequada  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V667.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V668.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V669.html">Moradores em domicílios particulares permanentes com moradia inadequada  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V670.html">Moradores em domicílios particulares permanentes com moradia inadequada  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V671.html">Moradores em domicílios particulares permanentes com moradia adequada  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V672.html">Moradores em domicílios particulares permanentes com moradia adequada  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V673.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V674.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V675.html">Moradores em domicílios particulares permanentes com moradia inadequada  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V676.html">Moradores em domicílios particulares permanentes com moradia inadequada  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V677.html">Moradores em domicílios particulares permanentes com moradia adequada  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V678.html">Moradores em domicílios particulares permanentes com moradia adequada  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V679.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V680.html">Moradores em domicílios particulares permanentes com moradia semi-adequada  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V681.html">Moradores em domicílios particulares permanentes com moradia inadequada  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V682.html">Moradores em domicílios particulares permanentes com moradia inadequada  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V683.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V684.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V685.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V686.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V687.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V688.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V689.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V690.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V691.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V692.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V693.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita - Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V694.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V695.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V696.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V697.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V698.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V699.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V700.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V701.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V702.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V703.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V704.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V705.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita - Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V706.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V707.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V708.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V709.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V710.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V711.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V712.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V713.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V714.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V715.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V716.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V717.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita - Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V718.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V719.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V720.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V721.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V722.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V723.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V724.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V725.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V726.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V727.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V728.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V729.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita - Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V730.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V731.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V732.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V733.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V734.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V735.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V736.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V737.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V738.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V739.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V740.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V741.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita - Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V742.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V743.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V744.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V745.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V746.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V747.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V748.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V749.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V750.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V751.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V752.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V753.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita - Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V754.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V755.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V756.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V757.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V758.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V759.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V760.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V761.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V762.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V763.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V764.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V765.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita - Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V766.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V767.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V768.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V769.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V770.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V771.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V772.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V773.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V774.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V775.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V776.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V777.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita - Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V778.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V779.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V780.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V781.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V782.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V783.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V784.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V785.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V786.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V787.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V788.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V789.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita - Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V790.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V791.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V792.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita até 1/4 do SM  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V793.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V794.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/4 a 1/2 SM  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V795.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V796.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1/2 a 1 SM  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V797.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V798.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 1 a 2 SM  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V799.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V800.html">Moradores em domicílios particulares permanentes com rendimento nominal mensal domiciliar per capita de mais de 2 SM  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V801.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V802.html">Moradores em domicílios particulares permanentes sem rendimento nominal mensal domiciliar per capita  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V803.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V804.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V805.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V806.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V807.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V808.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V809.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V810.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V811.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V812.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V813.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V814.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V815.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V816.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V817.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V818.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V819.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V820.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V821.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V822.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V823.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V824.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V825.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V826.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V827.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V828.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V829.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V830.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V831.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V832.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V833.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V834.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V835.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V836.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V837.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V838.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V839.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V840.html">Moradores em domicílios particulares permanentes com responsável do sexo masculino  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V841.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno04_V842.html">Moradores em domicílios particulares permanentes com responsável do sexo feminino  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1000.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1001.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1002.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1003.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1004.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1005.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1006.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1007.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1008.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1009.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1010.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1011.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1012.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1013.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1014.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1015.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1016.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1017.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1018.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1019.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1020.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1021.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1022.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1023.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1024.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1025.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1026.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1027.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1028.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1029.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1030.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1031.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1032.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1033.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1034.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1035.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1036.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1037.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1038.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1039.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1040.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1041.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1042.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1043.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1044.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1045.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1046.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1047.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1048.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1049.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1050.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1051.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1052.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1053.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1054.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1055.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1056.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1057.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1058.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1059.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1060.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1061.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V1062.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V843.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V844.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V845.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V846.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V847.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V848.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V849.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V850.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V851.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V852.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V853.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V854.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V855.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V856.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V857.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V858.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V859.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V860.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V861.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V862.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V863.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V864.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V865.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V866.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V867.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V868.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V869.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V870.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V871.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V872.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V873.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V874.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V875.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V876.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V877.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V878.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V879.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V880.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V881.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V882.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V883.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V884.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V885.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V886.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V887.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V888.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V889.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V890.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V891.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V892.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V893.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V894.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V895.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V896.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V897.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V898.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V899.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V900.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V901.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V902.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Não existe meio-fio/guia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V903.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V904.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V905.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V906.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V907.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V908.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V909.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V910.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V911.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V912.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V913.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V914.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Não existe bueiro/boca-de-lobo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V915.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V916.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V917.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V918.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V919.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V920.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V921.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V922.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V923.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V924.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V925.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V926.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Não existe rampa para cadeirante</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V927.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V928.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V929.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V930.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V931.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V932.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V933.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V934.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V935.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V936.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V937.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V938.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Não existe arborização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V939.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V940.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V941.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V942.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V943.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V944.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V945.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V946.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V947.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V948.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V949.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V950.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Não existe esgoto a céu aberto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V951.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V952.html">Moradores em domicílios particulares permanentes com menos de 1 ano de idade  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V953.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V954.html">Moradores em domicílios particulares permanentes de 1 a 4 anos de idade  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V955.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V956.html">Moradores em domicílios particulares permanentes de 5 a 9 anos de idade  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V957.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V958.html">Moradores em domicílios particulares permanentes de 10 a 14 anos de idade  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V959.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V960.html">Moradores em domicílios particulares permanentes de 15 a 59 anos de idade  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V961.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V962.html">Moradores em domicílios particulares permanentes de 60 anos ou mais de idade  Não existe lixo acumulado nos logradouros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V963.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V964.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V965.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V966.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V967.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V968.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V969.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V970.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V971.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V972.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Não existe identificação do logradouro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V973.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V974.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V975.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V976.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V977.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V978.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V979.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V980.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V981.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V982.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Não existe iluminação pública</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V983.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V984.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V985.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V986.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V987.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V988.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V989.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V990.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V991.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V992.html">Moradores em domicílios particulares permanentes de cor ou raça indígena  Não existe pavimentação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V993.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V994.html">Moradores em domicílios particulares permanentes de cor ou raça branca  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V995.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V996.html">Moradores em domicílios particulares permanentes de cor ou raça preta  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V997.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V998.html">Moradores em domicílios particulares permanentes de cor ou raça amarela  Não existe calçada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Entorno03_V422/br.data.Entorno05_V999.html">Moradores em domicílios particulares permanentes de cor ou raça parda  Existe calçada</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="boundaries">
+<h2>Boundaries<a class="headerlink" href="#boundaries" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Boundary</th>
+<th class="head">Time (default is latest)</th>
+</tr>
+</thead>
+<tbody valign="top"><tr class="row-even"><td><p><a class="reference internal" href="../boundary/br.geo.setores_censitarios.html#br-geo-setores-censitarios"><span class="std std-ref">Census tracts</span></a></p>
+</td>
+<td><p>2010</p>
+</td></tr>
+</tbody>
+</table></div>
+<div class="section" id="related-columns">
+<h2>Related columns<a class="headerlink" href="#related-columns" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><span class="xref std std-ref">None</span></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="source">
+<h2>Source<a class="headerlink" href="#source" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../../sources.html#br-data-ibge-censo"><span class="std std-ref">Censo Demográfico Instituto Brasileiro de Geografia e Estatística (IBGE)</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../../licenses.html#br-data-ibge-license"><span class="std std-ref">Law No. 12,527, OF November 18, 2011</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Moradores em domicílios particulares permanentes (640 subcolumns)</a><ul>
+<li><a class="reference internal" href="#subcolumns">Subcolumns</a></li>
+<li><a class="reference internal" href="#boundaries">Boundaries</a></li>
+<li><a class="reference internal" href="#related-columns">Related columns</a></li>
+<li><a class="reference internal" href="#source">Source</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../br.html">Brazil</a><ul>
+  <li><a href="../housing.html">Housing</a><ul>
+      <li>Previous: <a href="br.data.Entorno01_V001/br.data.Entorno02_V421.html" title="previous chapter">Domicílios particulares permanentes com responsável do sexo feminino  Não existe lixo acumulado nos logradouros</a></li>
+      <li>Next: <a href="br.data.Entorno03_V422/br.data.Entorno03_V423.html" title="next chapter">Moradores em domicílios particulares permanentes próprios  Existe identificação do logradouro</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/br/housing/br.data.Entorno03_V422.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, CARTO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../../_sources/br/housing/br.data.Entorno03_V422.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Net capital gains or losses as a % of total income (male) &mdash; observatory 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/tabs.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/semantic-ui-2.2.7/segment.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/semantic-ui-2.2.7/menu.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/semantic-ui-2.2.7/tab.min.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/sphinx_tabs/tabs.js"></script>
+    <script type="text/javascript" src="../../_static/sphinx_tabs/semantic-ui-2.2.7/tab.min.js"></script>
+    <link rel="top" title="observatory 0.0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Income" href="../income.html" />
+    <link rel="next" title="Net capital gains or losses as a % of total income (total)" href="ca.statcan.cols_nhs.t013c051_t.html" />
+    <link rel="prev" title="Net capital gains or losses as a % of total income (female)" href="ca.statcan.cols_nhs.t013c051_f.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="net-capital-gains-or-losses-as-a-of-total-income-male">
+<span id="ca-statcan-cols-nhs-t013c051-m"></span><h1>Net capital gains or losses as a % of total income (male)<a class="headerlink" href="#net-capital-gains-or-losses-as-a-of-total-income-male" title="Permalink to this headline">¶</a></h1>
+<div class="sphinx-tabs docutils container">
+<div class="ui top attached tabular menu sphinx-menu docutils container">
+<div class="active item sphinx-data-tab-0 docutils container">
+Point</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-0 active docutils container">
+<p>Update a field of a table with the value of &#8220;Net capital gains or losses as a % of total income (male)&#8221; for a point. The value will be from
+the densest boundary with this measure.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">cartodb_id</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span> <span class="n">the_geom</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;ca.statcan.cols_nhs.t013c051_m&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">UPDATE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="o">&lt;</span><span class="n">field_to_update</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span> <span class="n">obs_data</span>
+<span class="k">WHERE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span><span class="mf">.</span><span class="n">cartodb_id</span> <span class="o">=</span> <span class="n">obs_data</span><span class="mf">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Obtain the value of &#8220;Net capital gains or losses as a % of total income (male)&#8221; for a point. The value will be from
+the densest boundary with this measure.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="mf">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span>
+  <span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Point</span><span class="p">(</span><span class="o">-</span><span class="mf">79.379</span><span class="p">,</span> <span class="mf">43.655</span><span class="p">),</span> <span class="mf">4326</span><span class="p">)</span> <span class="n">the_geom</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;ca.statcan.cols_nhs.t013c051_m&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span> <span class="k">AS</span> <span class="n">t013c051_m</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="boundaries">
+<h2>Boundaries<a class="headerlink" href="#boundaries" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Boundary</th>
+<th class="head">Time (default is latest)</th>
+</tr>
+</thead>
+<tbody valign="top"><tr class="row-even"><td><p><a class="reference internal" href="../boundary/ca.statcan.geo.cd_.html#ca-statcan-geo-cd"><span class="std std-ref">Census divisions</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../boundary/ca.statcan.geo.cma.html#ca-statcan-geo-cma"><span class="std std-ref">Census metropolitan areas and census agglomerations</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../boundary/ca.statcan.geo.csd.html#ca-statcan-geo-csd"><span class="std std-ref">Census subdivisions</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../boundary/ca.statcan.geo.pr_.html#ca-statcan-geo-pr"><span class="std std-ref">Canada, provinces and territories</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../boundary/ca.statcan.geo.ct_.html#ca-statcan-geo-ct"><span class="std std-ref">Census tracts</span></a></p>
+</td>
+<td><p>2011</p>
+</td></tr>
+</tbody>
+</table></div>
+<div class="section" id="related-columns">
+<h2>Related columns<a class="headerlink" href="#related-columns" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><span class="xref std std-ref">None</span></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="source">
+<h2>Source<a class="headerlink" href="#source" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../../sources.html#ca-statcan-license-statcan-nhs-2011"><span class="std std-ref">Statistics Canada National Household Survey 2011</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../../licenses.html#ca-statcan-license-statcan-license"><span class="std std-ref">Statistics Canada Open Licence Agreement</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Net capital gains or losses as a % of total income (male)</a><ul>
+<li><a class="reference internal" href="#boundaries">Boundaries</a></li>
+<li><a class="reference internal" href="#related-columns">Related columns</a></li>
+<li><a class="reference internal" href="#source">Source</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../ca.html">Canada</a><ul>
+  <li><a href="../income.html">Income</a><ul>
+      <li>Previous: <a href="ca.statcan.cols_nhs.t013c051_f.html" title="previous chapter">Net capital gains or losses as a % of total income (female)</a></li>
+      <li>Next: <a href="ca.statcan.cols_nhs.t013c051_t.html" title="next chapter">Net capital gains or losses as a % of total income (total)</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/ca/income/ca.statcan.cols_nhs.t013c051_m.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, CARTO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../../_sources/ca/income/ca.statcan.cols_nhs.t013c051_m.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

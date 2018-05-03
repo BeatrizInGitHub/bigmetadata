@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Total population (80 subcolumns) &mdash; observatory 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/tabs.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/semantic-ui-2.2.7/segment.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/semantic-ui-2.2.7/menu.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/semantic-ui-2.2.7/tab.min.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/sphinx_tabs/tabs.js"></script>
+    <script type="text/javascript" src="../../_static/sphinx_tabs/semantic-ui-2.2.7/tab.min.js"></script>
+    <link rel="top" title="observatory 0.0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Age and Gender" href="../age_gender.html" />
+    <link rel="next" title="Population age 0 to 4" href="es.ine.t1_1/es.ine.pop_0_4.html" />
+    <link rel="prev" title="Age and Gender" href="../age_gender.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="total-population-80-subcolumns">
+<span id="es-ine-t1-1"></span><h1>Total population (80 subcolumns)<a class="headerlink" href="#total-population-80-subcolumns" title="Permalink to this headline">¶</a></h1>
+<div class="sphinx-tabs docutils container">
+<div class="ui top attached tabular menu sphinx-menu docutils container">
+<div class="active item sphinx-data-tab-0 docutils container">
+Per sq km</div>
+<div class="item sphinx-data-tab-1 docutils container">
+Raw count</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-0 active docutils container">
+<p>Update a field of a table with an estimate of &#8220;Total population&#8221; per square kilometer using area
+weighted interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">cartodb_id</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span> <span class="n">the_geom</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;es.ine.t1_1&quot;,</span>
+<span class="s1">    &quot;normalization&quot;: &quot;areaNormalized&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">UPDATE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="o">&lt;</span><span class="n">field_to_update</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span> <span class="n">obs_data</span>
+<span class="k">WHERE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span><span class="mf">.</span><span class="n">cartodb_id</span> <span class="o">=</span> <span class="n">obs_data</span><span class="mf">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Obtain an estimate of &#8220;Total population&#8221; per square kilometer using area
+weighted interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="mf">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span>
+  <span class="n">ST_Buffer</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Point</span><span class="p">(</span><span class="o">-</span><span class="mf">2.511</span><span class="p">,</span> <span class="mf">42.822</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span> <span class="n">the_geom</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;es.ine.t1_1&quot;,</span>
+<span class="s1">     &quot;normalization&quot;: &quot;areaNormalized&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span> <span class="k">AS</span> <span class="n">total_pop_per_sq_km_2015</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-1 docutils container">
+<p>Update a field of a table with an estimate of &#8220;Total population&#8221; for a polygon using area-weighted
+interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">cartodb_id</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span> <span class="n">the_geom</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;es.ine.t1_1&quot;,</span>
+<span class="s1">    &quot;normalization&quot;: &quot;predenominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">UPDATE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="o">&lt;</span><span class="n">field_to_update</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span> <span class="n">obs_data</span>
+<span class="k">WHERE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span><span class="mf">.</span><span class="n">cartodb_id</span> <span class="o">=</span> <span class="n">obs_data</span><span class="mf">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Obtain an estimate of &#8220;Total population&#8221; for a polygon using area-weighted
+interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="mf">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span>
+  <span class="n">ST_Buffer</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Point</span><span class="p">(</span><span class="o">-</span><span class="mf">2.511</span><span class="p">,</span> <span class="mf">42.822</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span> <span class="n">the_geom</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;es.ine.t1_1&quot;,</span>
+<span class="s1">     &quot;normalization&quot;: &quot;predenominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span> <span class="k">AS</span> <span class="n">total_pop_2015</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="subcolumns">
+<h2>Subcolumns<a class="headerlink" href="#subcolumns" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_0_4.html">Population age 0 to 4</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_0_4_female.html">Population age 0 to 4 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_0_4_male.html">Population age 0 to 4 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_100_more.html">Population age 100 or more</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_100_more_female.html">Population age 100 or more (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_100_more_male.html">Population age 100 or more (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_10_14.html">Population age 10 to 14</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_10_14_female.html">Population age 10 to 14 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_10_14_male.html">Population age 10 to 14 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_15_19.html">Population age 15 to 19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_15_19_female.html">Population age 15 to 19 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_15_19_male.html">Population age 15 to 19 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_20_24.html">Population age 20 to 24</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_20_24_female.html">Population age 20 to 24 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_20_24_male.html">Population age 20 to 24 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_25_29.html">Population age 25 to 29</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_25_29_female.html">Population age 25 to 29 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_25_29_male.html">Population age 25 to 29 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_30_34.html">Population age 30 to 34</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_30_34_female.html">Population age 30 to 34 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_30_34_male.html">Population age 30 to 34 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_35_39.html">Population age 35 to 39</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_35_39_female.html">Population age 35 to 39 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_35_39_male.html">Population age 35 to 39 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_40_44.html">Population age 40 to 44</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_40_44_female.html">Population age 40 to 44 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_40_44_male.html">Population age 40 to 44 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_45_49.html">Population age 45 to 49</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_45_49_female.html">Population age 45 to 49 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_45_49_male.html">Population age 45 to 49 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_50_54.html">Population age 50 to 54</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_50_54_female.html">Population age 50 to 54 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_50_54_male.html">Population age 50 to 54 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_55_59.html">Population age 55 to 59</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_55_59_female.html">Population age 55 to 59 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_55_59_male.html">Population age 55 to 59 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_5_9.html">Population age 5 to 9</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_5_9_female.html">Population age 5 to 9 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_5_9_male.html">Population age 5 to 9 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_60_64.html">Population age 60 to 64</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_60_64_female.html">Population age 60 to 64 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_60_64_male.html">Population age 60 to 64 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_65_69.html">Population age 65 to 69</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_65_69_female.html">Population age 65 to 69 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_65_69_male.html">Population age 65 to 69 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_70_74.html">Population age 70 to 74</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_70_74_female.html">Population age 70 to 74 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_70_74_male.html">Population age 70 to 74 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_75_79.html">Population age 75 to 79</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_75_79_female.html">Population age 75 to 79 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_75_79_male.html">Population age 75 to 79 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_80_84.html">Population age 80 to 84</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_80_84_female.html">Population age 80 to 84 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_80_84_male.html">Population age 80 to 84 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_85_89.html">Population age 85 to 89</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_85_89_female.html">Population age 85 to 89 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_85_89_male.html">Population age 85 to 89 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_90_94.html">Population age 90 to 94</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_90_94_female.html">Population age 90 to 94 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_90_94_male.html">Population age 90 to 94 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_95_99.html">Population age 95 to 99</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_95_99_female.html">Population age 95 to 99 (female)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.pop_95_99_male.html">Population age 95 to 99 (male)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t10_1.html">Persons with marital status: single  (3 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t10_2.html">Persons with marital status: married (3 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t10_3.html">Persons with marital status: separated (3 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t10_4.html">Persons with marital status: divorced (3 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t10_5.html">Persons with marital status: widowed (3 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t12_1.html">Illiterate persons (4 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t12_2.html">Persons without studies (4 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t12_3.html">Persons with first level studies (8 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t12_4.html">Persons with second level studies (2 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t12_5.html">Persons with third level studies (2 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t2_1.html">Males (32 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t2_2.html">Females (32 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t3_1.html">Persons aged under 16 years (10 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t3_2.html">Persons aged between 16 (included) and 64 (included) years (14 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t3_3.html">Persons aged over 64 years (14 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t6_1.html">Persons with Spanish nationality (7 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="es.ine.t1_1/es.ine.t6_2.html">Persons with a foreign nationality (5 subcolumns)</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="boundaries">
+<h2>Boundaries<a class="headerlink" href="#boundaries" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Boundary</th>
+<th class="head">Time (default is latest)</th>
+</tr>
+</thead>
+<tbody valign="top"><tr class="row-even"><td><p><a class="reference internal" href="../boundary/es.ine.the_geom.html#es-ine-the-geom"><span class="std std-ref">Sección Censal</span></a></p>
+</td>
+<td><p>2015</p>
+</td></tr>
+</tbody>
+</table></div>
+<div class="section" id="related-columns">
+<h2>Related columns<a class="headerlink" href="#related-columns" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><span class="xref std std-ref">None</span></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="source">
+<h2>Source<a class="headerlink" href="#source" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../../sources.html#es-ine-ine-source"><span class="std std-ref">National Statistics Institute (INE) Legal Notice</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../../licenses.html#es-ine-ine-license"><span class="std std-ref">National Statistics Institute (INE)</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Total population (80 subcolumns)</a><ul>
+<li><a class="reference internal" href="#subcolumns">Subcolumns</a></li>
+<li><a class="reference internal" href="#boundaries">Boundaries</a></li>
+<li><a class="reference internal" href="#related-columns">Related columns</a></li>
+<li><a class="reference internal" href="#source">Source</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../spain.html">Spain</a><ul>
+  <li><a href="../age_gender.html">Age and Gender</a><ul>
+      <li>Previous: <a href="../age_gender.html" title="previous chapter">Age and Gender</a></li>
+      <li>Next: <a href="es.ine.t1_1/es.ine.pop_0_4.html" title="next chapter">Population age 0 to 4</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/spain/age_gender/es.ine.t1_1.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, CARTO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../../_sources/spain/age_gender/es.ine.t1_1.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

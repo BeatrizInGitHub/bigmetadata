@@ -1,0 +1,178 @@
+.. _us.census.spielman_singleton_segments.X10:
+
+Spielman-Singleton Segments: 10 Clusters
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Sociodemographic classes from Spielman and Singleton 2015, 10 clusters
+
+
+  
+  * **Residential Institutions**: Advanced education, highly mobile, White, Black or Asian, public transit, low rent.
+  
+  * **Native American**: Native Amerian, high school educated with some college, commutes for work, single parent families, typical doesn't own a car and lives in low cost rental housing.
+  
+  * **Low income and diverse**: High school education, single parent families, mobile within cities, multilingual, Black or Asian, typically doesn't own a car, uses public transit, high median rent. 
+  
+  * **Hispanic and Young**: Predominantly Hispanic, tends to have at most high school education, lots of married couples and single mothers, high mobility within cities, typically takes public transit and tends to rent.
+  
+  * **Low income, mix of minorities**: Highschool education, single parent familes, mobile within cities, diverse minorities, uses public transit and low rent.
+  
+  * **Low income, African American**: African American, low income, high school education, single parent famalies, mobile within cities, uses public transport.
+  
+  * **Wealthy Nuclear Families**: Highly educated, high levels of bachelor or grad degrees, married couples and some same sex couples, tends to stay put, white or asian, high income, tends to own a car and lives in single family homes with high rents.
+  
+  * **Middle Income, Single Family Home**: High school and some college education, mix of single parents and married couples, tends to stay put and only moves within cities, English speaking, white, good retirement funds, owns their own car, lives in lower rent homes of mobile homes.
+  
+  * **Wealthy Old Caucasion**: Highly educated, married couples and same sex couples, tend to stay put, English speaking, White or Asian, high income and high rent.
+  
+  * **Wealthy, urban without Kids**: Typically has an advanced degree, single parents or same sex couples, highly mobile, White, Black or Asian, doesn't own a car and lives in high rental housing.
+  
+
+
+
+
+
+
+
+
+
+
+.. tabs::
+
+
+
+   
+
+
+
+
+   .. tab:: {"tab_name": "Point"}
+
+      Update a field of a table with the value of "Spielman-Singleton Segments: 10 Clusters" for a point. The value will be from
+      the densest boundary with this measure.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT cartodb_id AS id, the_geom FROM <table_to_update>
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.spielman_singleton_segments.X10"}]'
+            , 1, 1) meta
+          FROM data)
+          UPDATE <table_to_update> SET <field_to_update> = (data->0->>'value')::Text
+          FROM OBS_GetData(
+                (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                (SELECT meta FROM meta)) obs_data
+          WHERE <table_to_update>.cartodb_id = obs_data.id
+
+      Obtain the value of "Spielman-Singleton Segments: 10 Clusters" for a point. The value will be from
+      the densest boundary with this measure.
+
+      .. code-block:: postgresql
+
+          WITH data AS (
+            SELECT 1 AS id,
+            ST_SetSRID(ST_Point(-73.9, 40.7), 4326) the_geom
+          ),
+          meta AS (
+            SELECT OBS_GetMeta(ST_SetSRID(ST_Extent(the_geom), 4326),
+            '[{"numer_id": "us.census.spielman_singleton_segments.X10"}]'
+            , 1, 1) meta
+          FROM data)
+          SELECT id, (data->0->>'value')::Text AS x10
+          FROM OBS_GetData(
+                 (SELECT ARRAY_AGG((the_geom, id)::geomval) FROM data),
+                 (SELECT meta FROM meta))
+
+
+
+
+
+
+
+
+
+Boundaries
+~~~~~~~~~~
+
+.. raw:: html
+
+  <table border="1" class="docutils">
+  <thead valign="bottom">
+  <tr class="row-odd"><th class="head">Boundary</th>
+  <th class="head">Time (default is latest)</th>
+  </tr>
+  </thead>
+  <tbody valign="top">
+
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.census_tract`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2010 - 2014
+
+.. raw:: html
+
+  </td>
+
+  
+.. raw:: html
+
+  <tr class="row-even"><td>
+
+:ref:`us.census.tiger.census_tract_clipped`
+
+.. raw:: html
+
+  </td>
+  <td>
+
+2010 - 2014
+
+.. raw:: html
+
+  </td>
+
+  
+
+.. raw:: html
+
+  </tr>
+  </tbody>
+  </table>
+
+
+
+
+Related columns
+~~~~~~~~~~~~~~~
+    
+      * :ref:`None`
+    
+
+
+
+Source
+~~~~~~
+    
+      * Not available
+    
+
+
+
+License
+~~~~~~~
+    
+      * Not available
+    

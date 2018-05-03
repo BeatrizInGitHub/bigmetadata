@@ -1,0 +1,342 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Males Mining Age 65-74 years &mdash; observatory 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/sphinx_tabs/tabs.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/sphinx_tabs/semantic-ui-2.2.7/segment.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/sphinx_tabs/semantic-ui-2.2.7/menu.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/sphinx_tabs/semantic-ui-2.2.7/tab.min.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/sphinx_tabs/tabs.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/sphinx_tabs/semantic-ui-2.2.7/tab.min.js"></script>
+    <link rel="top" title="observatory 0.0.1 documentation" href="../../../../../../index.html" />
+    <link rel="up" title="Males Mining Total (9 subcolumns)" href="../au.data.B43A_M_Mining_Tot.html" />
+    <link rel="next" title="Males Mining Age 75-84 years" href="au.data.B43A_M_Mining_75_84.html" />
+    <link rel="prev" title="Males Mining Age 55-64 years" href="au.data.B43A_M_Mining_55_64.html" />
+   
+  <link rel="stylesheet" href="../../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="males-mining-age-65-74-years">
+<span id="au-data-b43a-m-mining-65-74"></span><h1>Males Mining Age 65-74 years<a class="headerlink" href="#males-mining-age-65-74-years" title="Permalink to this headline">¶</a></h1>
+<p>Industry of Employment</p>
+<div class="sphinx-tabs docutils container">
+<div class="ui top attached tabular menu sphinx-menu docutils container">
+<div class="active item sphinx-data-tab-0 docutils container">
+Per Males Mining Total</div>
+<div class="item sphinx-data-tab-1 docutils container">
+Per sq km</div>
+<div class="item sphinx-data-tab-2 docutils container">
+Raw count</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-0 active docutils container">
+<p>Update a field of a table with an estimate of &#8220;Males Mining Age 65-74 years&#8221; per Males Mining Total for a polygon
+using a combination of weighting by area and Males Mining Total.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">cartodb_id</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span> <span class="n">the_geom</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;au.data.B43A_M_Mining_65_74&quot;,</span>
+<span class="s1">    &quot;denom_id&quot;: &quot;au.data.B43A_M_Mining_Tot&quot;,</span>
+<span class="s1">    &quot;normalization&quot;: &quot;denominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">UPDATE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="o">&lt;</span><span class="n">field_to_update</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span> <span class="n">obs_data</span>
+<span class="k">WHERE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span><span class="mf">.</span><span class="n">cartodb_id</span> <span class="o">=</span> <span class="n">obs_data</span><span class="mf">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Obtain an estimate of &#8220;Males Mining Age 65-74 years&#8221; per Males Mining Total for a polygon
+using a combination of weighting by area and Males Mining Total.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="mf">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span>
+  <span class="n">ST_Buffer</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Point</span><span class="p">(</span><span class="mf">151.213</span><span class="p">,</span> <span class="o">-</span><span class="mf">33.88</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span> <span class="n">the_geom</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;au.data.B43A_M_Mining_65_74&quot;,</span>
+<span class="s1">     &quot;denom_id&quot;: &quot;au.data.B43A_M_Mining_Tot&quot;,</span>
+<span class="s1">     &quot;normalization&quot;: &quot;denominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span> <span class="k">AS</span> <span class="n">b43a_m_mining_65_74_rate_2011</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-1 docutils container">
+<p>Update a field of a table with an estimate of &#8220;Males Mining Age 65-74 years&#8221; per square kilometer using area
+weighted interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">cartodb_id</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span> <span class="n">the_geom</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;au.data.B43A_M_Mining_65_74&quot;,</span>
+<span class="s1">    &quot;normalization&quot;: &quot;areaNormalized&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">UPDATE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="o">&lt;</span><span class="n">field_to_update</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span> <span class="n">obs_data</span>
+<span class="k">WHERE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span><span class="mf">.</span><span class="n">cartodb_id</span> <span class="o">=</span> <span class="n">obs_data</span><span class="mf">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Obtain an estimate of &#8220;Males Mining Age 65-74 years&#8221; per square kilometer using area
+weighted interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="mf">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span>
+  <span class="n">ST_Buffer</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Point</span><span class="p">(</span><span class="mf">151.213</span><span class="p">,</span> <span class="o">-</span><span class="mf">33.88</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span> <span class="n">the_geom</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;au.data.B43A_M_Mining_65_74&quot;,</span>
+<span class="s1">     &quot;normalization&quot;: &quot;areaNormalized&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span> <span class="k">AS</span> <span class="n">b43a_m_mining_65_74_per_sq_km_2011</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-2 docutils container">
+<p>Update a field of a table with an estimate of &#8220;Males Mining Age 65-74 years&#8221; for a polygon using area-weighted
+interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">cartodb_id</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span> <span class="n">the_geom</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;au.data.B43A_M_Mining_65_74&quot;,</span>
+<span class="s1">    &quot;normalization&quot;: &quot;predenominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">UPDATE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="o">&lt;</span><span class="n">field_to_update</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span> <span class="n">obs_data</span>
+<span class="k">WHERE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span><span class="mf">.</span><span class="n">cartodb_id</span> <span class="o">=</span> <span class="n">obs_data</span><span class="mf">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Obtain an estimate of &#8220;Males Mining Age 65-74 years&#8221; for a polygon using area-weighted
+interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="mf">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span>
+  <span class="n">ST_Buffer</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Point</span><span class="p">(</span><span class="mf">151.213</span><span class="p">,</span> <span class="o">-</span><span class="mf">33.88</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span> <span class="n">the_geom</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;au.data.B43A_M_Mining_65_74&quot;,</span>
+<span class="s1">     &quot;normalization&quot;: &quot;predenominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span> <span class="k">AS</span> <span class="n">b43a_m_mining_65_74_2011</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="boundaries">
+<h2>Boundaries<a class="headerlink" href="#boundaries" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Boundary</th>
+<th class="head">Time (default is latest)</th>
+</tr>
+</thead>
+<tbody valign="top"><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.SUA.html#au-geo-sua"><span class="std std-ref">Significant Urban Areas</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.SA1.html#au-geo-sa1"><span class="std std-ref">Statistical Area Level 1</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.GCCSA.html#au-geo-gccsa"><span class="std std-ref">Greater Capital City Statistical Areas</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.POA.html#au-geo-poa"><span class="std std-ref">Postal Areas</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.RA.html#au-geo-ra"><span class="std std-ref">Remoteness Areas</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.SA4.html#au-geo-sa4"><span class="std std-ref">Statistical Area Level 4</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.CED.html#au-geo-ced"><span class="std std-ref">Commonwealth Electoral Divisions</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.SOSR.html#au-geo-sosr"><span class="std std-ref">Section of State Ranges</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.SLA.html#au-geo-sla"><span class="std std-ref">Statistical Local Areas</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.SA3.html#au-geo-sa3"><span class="std std-ref">Statistical Area Level 3</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.STE.html#au-geo-ste"><span class="std std-ref">State/Territory</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.UCL.html#au-geo-ucl"><span class="std std-ref">Urban Centres and Localities</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.SED.html#au-geo-sed"><span class="std std-ref">State Electoral Divisions</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.LGA.html#au-geo-lga"><span class="std std-ref">Local Government Areas</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.SOS.html#au-geo-sos"><span class="std std-ref">Section of State</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.SA2.html#au-geo-sa2"><span class="std std-ref">Statistical Area Level 2</span></a></p>
+</td>
+<td><p>2011</p>
+</td><tr class="row-even"><td><p><a class="reference internal" href="../../../../../boundary/au.geo.SSC.html#au-geo-ssc"><span class="std std-ref">State Suburbs</span></a></p>
+</td>
+<td><p>2011</p>
+</td></tr>
+</tbody>
+</table></div>
+<div class="section" id="related-columns">
+<h2>Related columns<a class="headerlink" href="#related-columns" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../au.data.B43A_M_Mining_Tot.html#au-data-b43a-m-mining-tot"><span class="std std-ref">Males Mining Total (9 subcolumns)</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="source">
+<h2>Source<a class="headerlink" href="#source" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../../../../../../sources.html#au-geo-au-census"><span class="std std-ref">Australian Bureau of Statistics (ABS)</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../../../../../../licenses.html#au-geo-au-datapacks-license"><span class="std std-ref">Creative Commons Attribution 2.5 Australia licence</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Males Mining Age 65-74 years</a><ul>
+<li><a class="reference internal" href="#boundaries">Boundaries</a></li>
+<li><a class="reference internal" href="#related-columns">Related columns</a></li>
+<li><a class="reference internal" href="#source">Source</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../../../au.html">Australia</a><ul>
+  <li><a href="../../../../../employment.html">Employment</a><ul>
+  <li><a href="../../../../au.data.B01_Tot_P_P.html">Total (Persons) (26 subcolumns)</a><ul>
+  <li><a href="../../../au.data.B43D_P_Tot_Tot.html">Persons Total Total (31 subcolumns)</a><ul>
+  <li><a href="../../au.data.B43B_M_Tot_Tot.html">Males Total Total (29 subcolumns)</a><ul>
+  <li><a href="../au.data.B43A_M_Mining_Tot.html">Males Mining Total (9 subcolumns)</a><ul>
+      <li>Previous: <a href="au.data.B43A_M_Mining_55_64.html" title="previous chapter">Males Mining Age 55-64 years</a></li>
+      <li>Next: <a href="au.data.B43A_M_Mining_75_84.html" title="next chapter">Males Mining Age 75-84 years</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../../_sources/au/employment/au.data.B01_Tot_P_P/au.data.B43D_P_Tot_Tot/au.data.B43B_M_Tot_Tot/au.data.B43A_M_Mining_Tot/au.data.B43A_M_Mining_65_74.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, CARTO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../../../../../../_sources/au/employment/au.data.B01_Tot_P_P/au.data.B43D_P_Tot_Tot/au.data.B43B_M_Tot_Tot/au.data.B43A_M_Mining_Tot/au.data.B43A_M_Mining_65_74.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

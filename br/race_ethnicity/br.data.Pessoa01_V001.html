@@ -1,0 +1,388 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pessoas alfabetizadas com 5 ou mais anos de idade (137 subcolumns) &mdash; observatory 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/tabs.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/semantic-ui-2.2.7/segment.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/semantic-ui-2.2.7/menu.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx_tabs/semantic-ui-2.2.7/tab.min.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/sphinx_tabs/tabs.js"></script>
+    <script type="text/javascript" src="../../_static/sphinx_tabs/semantic-ui-2.2.7/tab.min.js"></script>
+    <link rel="top" title="observatory 0.0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Race and Ethnicity" href="../race_ethnicity.html" />
+    <link rel="next" title="Pessoas alfabetizadas de 7 a 9 anos de idade, do sexo masculino e cor ou raça - branca" href="br.data.Pessoa01_V001/br.data.Pessoa04_V001.html" />
+    <link rel="prev" title="Moradores em domicílios particulares permanentes de cor ou raça parda  Existe calçada" href="br.data.Entorno03_V422/br.data.Entorno05_V999.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pessoas-alfabetizadas-com-5-ou-mais-anos-de-idade-137-subcolumns">
+<span id="br-data-pessoa01-v001"></span><h1>Pessoas alfabetizadas com 5 ou mais anos de idade (137 subcolumns)<a class="headerlink" href="#pessoas-alfabetizadas-com-5-ou-mais-anos-de-idade-137-subcolumns" title="Permalink to this headline">¶</a></h1>
+<div class="sphinx-tabs docutils container">
+<div class="ui top attached tabular menu sphinx-menu docutils container">
+<div class="active item sphinx-data-tab-0 docutils container">
+Per sq km</div>
+<div class="item sphinx-data-tab-1 docutils container">
+Raw count</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-0 active docutils container">
+<p>Update a field of a table with an estimate of &#8220;Pessoas alfabetizadas com 5 ou mais anos de idade&#8221; per square kilometer using area
+weighted interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">cartodb_id</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span> <span class="n">the_geom</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Pessoa01_V001&quot;,</span>
+<span class="s1">    &quot;normalization&quot;: &quot;areaNormalized&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">UPDATE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="o">&lt;</span><span class="n">field_to_update</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span> <span class="n">obs_data</span>
+<span class="k">WHERE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span><span class="mf">.</span><span class="n">cartodb_id</span> <span class="o">=</span> <span class="n">obs_data</span><span class="mf">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Obtain an estimate of &#8220;Pessoas alfabetizadas com 5 ou mais anos de idade&#8221; per square kilometer using area
+weighted interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="mf">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span>
+  <span class="n">ST_Buffer</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Point</span><span class="p">(</span><span class="o">-</span><span class="mf">22.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">43.19</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span> <span class="n">the_geom</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Pessoa01_V001&quot;,</span>
+<span class="s1">     &quot;normalization&quot;: &quot;areaNormalized&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span> <span class="k">AS</span> <span class="n">pessoa01_v001_per_sq_km_2010</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-1 docutils container">
+<p>Update a field of a table with an estimate of &#8220;Pessoas alfabetizadas com 5 ou mais anos de idade&#8221; for a polygon using area-weighted
+interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">cartodb_id</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span> <span class="n">the_geom</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Pessoa01_V001&quot;,</span>
+<span class="s1">    &quot;normalization&quot;: &quot;predenominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">UPDATE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="o">&lt;</span><span class="n">field_to_update</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span> <span class="n">obs_data</span>
+<span class="k">WHERE</span> <span class="o">&lt;</span><span class="n">table_to_update</span><span class="o">&gt;</span><span class="mf">.</span><span class="n">cartodb_id</span> <span class="o">=</span> <span class="n">obs_data</span><span class="mf">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Obtain an estimate of &#8220;Pessoas alfabetizadas com 5 ou mais anos de idade&#8221; for a polygon using area-weighted
+interpolation.</p>
+<div class="highlight-postgresql"><div class="highlight"><pre><span></span><span class="k">WITH</span> <span class="k">data</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="mf">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">,</span>
+  <span class="n">ST_Buffer</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Point</span><span class="p">(</span><span class="o">-</span><span class="mf">22.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">43.19</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span> <span class="mf">0.01</span><span class="p">)</span> <span class="n">the_geom</span>
+<span class="p">),</span>
+<span class="n">meta</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">OBS_GetMeta</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_Extent</span><span class="p">(</span><span class="n">the_geom</span><span class="p">),</span> <span class="mf">4326</span><span class="p">),</span>
+  <span class="s1">&#39;[{&quot;numer_id&quot;: &quot;br.data.Pessoa01_V001&quot;,</span>
+<span class="s1">     &quot;normalization&quot;: &quot;predenominated&quot;}]&#39;</span>
+  <span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">1</span><span class="p">)</span> <span class="n">meta</span>
+<span class="k">FROM</span> <span class="k">data</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">data</span><span class="o">-&gt;</span><span class="mf">0</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">::</span><span class="nb">Numeric</span> <span class="k">AS</span> <span class="n">pessoa01_v001_2010</span>
+<span class="k">FROM</span> <span class="n">OBS_GetData</span><span class="p">(</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">ARRAY_AGG</span><span class="p">((</span><span class="n">the_geom</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span><span class="o">::</span><span class="n">geomval</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">data</span><span class="p">),</span>
+       <span class="p">(</span><span class="k">SELECT</span> <span class="n">meta</span> <span class="k">FROM</span> <span class="n">meta</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="subcolumns">
+<h2>Subcolumns<a class="headerlink" href="#subcolumns" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V001.html">Pessoas alfabetizadas de 7 a 9 anos de idade, do sexo masculino e cor ou raça - branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V002.html">Pessoas alfabetizadas de 7 a 9 anos de idade, do sexo masculino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V003.html">Pessoas alfabetizadas de 7 a 9 anos de idade, do sexo masculino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V004.html">Pessoas alfabetizadas de 7 a 9 anos de idade, do sexo masculino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V005.html">Pessoas alfabetizadas de 7 a 9 anos de idade, do sexo masculino e cor ou raça  indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V006.html">Pessoas alfabetizadas de 10 a 14 anos de idade, do sexo masculino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V007.html">Pessoas alfabetizadas de 10 a 14 anos de idade, do sexo masculino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V008.html">Pessoas alfabetizadas de 10 a 14 anos de idade, do sexo masculino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V009.html">Pessoas alfabetizadas de 10 a 14 anos de idade, do sexo masculino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V010.html">Pessoas alfabetizadas de 10 a 14 anos de idade, do sexo masculino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V011.html">Pessoas alfabetizadas de 15 a 19 anos de idade, do sexo masculino e cor ou raça  branca (2 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V012.html">Pessoas alfabetizadas de 15 a 19 anos de idade, do sexo masculino e cor ou raça  preta (2 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V013.html">Pessoas alfabetizadas de 15 a 19 anos de idade, do sexo masculino e cor ou raça  amarela (2 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V014.html">Pessoas alfabetizadas de 15 a 19 anos de idade, do sexo masculino e cor ou raça  parda (2 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V015.html">Pessoas alfabetizadas de 15 a 19 anos de idade, do sexo masculino e cor ou raça - indígena (2 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V026.html">Pessoas alfabetizadas de 20 a 24 anos de idade, do sexo masculino e cor ou raça - branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V027.html">Pessoas alfabetizadas de 20 a 24 anos de idade, do sexo masculino e cor ou raça - preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V028.html">Pessoas alfabetizadas de 20 a 24 anos de idade, do sexo masculino e cor ou raça - amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V029.html">Pessoas alfabetizadas de 20 a 24 anos de idade, do sexo masculino e cor ou raça - parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V030.html">Pessoas alfabetizadas de 20 a 24 anos de idade, do sexo masculino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V031.html">Pessoas alfabetizadas de 25 a 29 anos de idade, do sexo masculino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V032.html">Pessoas alfabetizadas de 25 a 29 anos de idade, do sexo masculino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V033.html">Pessoas alfabetizadas de 25 a 29 anos de idade, do sexo masculino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V034.html">Pessoas alfabetizadas de 25 a 29 anos de idade, do sexo masculino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V035.html">Pessoas alfabetizadas de 25 a 29 anos de idade, do sexo masculino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V036.html">Pessoas alfabetizadas de 30 a 34 anos de idade, do sexo masculino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V037.html">Pessoas alfabetizadas de 30 a 34 anos de idade, do sexo masculino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V038.html">Pessoas alfabetizadas de 30 a 34 anos de idade, do sexo masculino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V039.html">Pessoas alfabetizadas de 30 a 34 anos de idade, do sexo masculino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V040.html">Pessoas alfabetizadas de 30 a 34 anos de idade, do sexo masculino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V041.html">Pessoas alfabetizadas de 35 a 39 anos de idade, do sexo masculino e cor ou raça - branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V042.html">Pessoas alfabetizadas de 35 a 39 anos de idade, do sexo masculino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V043.html">Pessoas alfabetizadas de 35 a 39 anos de idade, do sexo masculino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V044.html">Pessoas alfabetizadas de 35 a 39 anos de idade, do sexo masculino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V045.html">Pessoas alfabetizadas de 35 a 39 anos de idade, do sexo masculino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V046.html">Pessoas alfabetizadas de 40 a 44 anos de idade, do sexo masculino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V047.html">Pessoas alfabetizadas de 40 a 44 anos de idade, do sexo masculino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V048.html">Pessoas alfabetizadas de 40 a 44 anos de idade, do sexo masculino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V049.html">Pessoas alfabetizadas de 40 a 44 anos de idade, do sexo masculino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V050.html">Pessoas alfabetizadas de 40 a 44 anos de idade, do sexo masculino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V051.html">Pessoas alfabetizadas de 45 a 49 anos de idade, do sexo masculino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V052.html">Pessoas alfabetizadas de 45 a 49 anos de idade, do sexo masculino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V053.html">Pessoas alfabetizadas de 45 a 49 anos de idade, do sexo masculino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V054.html">Pessoas alfabetizadas de 45 a 49 anos de idade, do sexo masculino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V055.html">Pessoas alfabetizadas de 45 a 49 anos de idade, do sexo masculino e cor ou raça  indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V056.html">Pessoas alfabetizadas de 50 a 54 anos de idade, do sexo masculino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V057.html">Pessoas alfabetizadas de 50 a 54 anos de idade, do sexo masculino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V058.html">Pessoas alfabetizadas de 50 a 54 anos de idade, do sexo masculino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V059.html">Pessoas alfabetizadas de 50 a 54 anos de idade, do sexo masculino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V060.html">Pessoas alfabetizadas de 50 a 54 anos de idade, do sexo masculino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V061.html">Pessoas alfabetizadas de 55 a 59 anos de idade, do sexo masculino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V062.html">Pessoas alfabetizadas de 55 a 59 anos de idade, do sexo masculino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V063.html">Pessoas alfabetizadas de 55 a 59 anos de idade, do sexo masculino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V064.html">Pessoas alfabetizadas de 55 a 59 anos de idade, do sexo masculino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V065.html">Pessoas alfabetizadas de 55 a 59 anos de idade, do sexo masculino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V066.html">Pessoas alfabetizadas de 60 a 69 anos de idade, do sexo masculino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V067.html">Pessoas alfabetizadas de 60 a 69 anos de idade, do sexo masculino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V068.html">Pessoas alfabetizadas de 60 a 69 anos de idade, do sexo masculino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V069.html">Pessoas alfabetizadas de 60 a 69 anos de idade, do sexo masculino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V070.html">Pessoas alfabetizadas de 60 a 69 anos de idade, do sexo masculino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V071.html">Pessoas alfabetizadas de 70 anos ou mais de idade, do sexo masculino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V072.html">Pessoas alfabetizadas de 70 anos ou mais de idade, do sexo masculino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V073.html">Pessoas alfabetizadas de 70 anos ou mais de idade, do sexo masculino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V074.html">Pessoas alfabetizadas de 70 anos ou mais de idade, do sexo masculino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V075.html">Pessoas alfabetizadas de 70 anos ou mais de idade, do sexo masculino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V076.html">Pessoas alfabetizadas de 5 ou 6 anos de idade, do sexo feminino e cor ou raça - branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V077.html">Pessoas alfabetizadas de 5 ou 6 anos de idade, do sexo feminino e cor ou raça - preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V078.html">Pessoas alfabetizadas de 5 ou 6 anos de idade, do sexo feminino e cor ou raça - amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V079.html">Pessoas alfabetizadas de 5 ou 6 anos de idade, do sexo feminino e cor ou raça - parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V080.html">Pessoas alfabetizadas de 5 ou 6 anos de idade, do sexo feminino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V081.html">Pessoas alfabetizadas de 7 a 9 anos de idade, do sexo feminino e cor ou raça - branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V082.html">Pessoas alfabetizadas de 7 a 9 anos de idade, do sexo feminino e cor ou raça - preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V083.html">Pessoas alfabetizadas de 7 a 9 anos de idade, do sexo feminino e cor ou raça - amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V084.html">Pessoas alfabetizadas de 7 a 9 anos de idade, do sexo feminino e cor ou raça - parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V085.html">Pessoas alfabetizadas de 7 a 9 anos de idade, do sexo feminino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V086.html">Pessoas alfabetizadas de 10 a 14 anos de idade, do sexo feminino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V087.html">Pessoas alfabetizadas de 10 a 14 anos de idade, do sexo feminino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V088.html">Pessoas alfabetizadas de 10 a 14 anos de idade, do sexo feminino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V089.html">Pessoas alfabetizadas de 10 a 14 anos de idade, do sexo feminino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V090.html">Pessoas alfabetizadas de 10 a 14 anos de idade, do sexo feminino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V091.html">Pessoas de15 a 19 anos de idade, do sexo feminino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V092.html">Pessoas de15 a 19 anos de idade, do sexo feminino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V093.html">Pessoas alfabetizadas de15 a 19 anos de idade, do sexo feminino e cor ou raça  amarela (2 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V094.html">Pessoas alfabetizadas de15 a 19 anos de idade, do sexo feminino e cor ou raça  parda (2 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V095.html">Pessoas alfabetizadas de15 a 19 anos de idade, do sexo feminino e cor ou raça - indígena (2 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V096.html">Pessoas alfabetizadas de 15 a 17 anos de idade, do sexo feminino e cor ou raça  branca (2 subcolumns)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V105.html">Pessoas alfabetizadas de 18 ou 19 anos de idade, do sexo feminino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V106.html">Pessoas alfabetizadas de 20 a 24 anos de idade, do sexo feminino e cor ou raça - branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V107.html">Pessoas alfabetizadas de 20 a 24 anos de idade, do sexo feminino e cor ou raça - preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V108.html">Pessoas alfabetizadas de 20 a 24 anos de idade, do sexo feminino e cor ou raça - amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V109.html">Pessoas alfabetizadas de 20 a 24 anos de idade, do sexo feminino e cor ou raça - parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V110.html">Pessoas alfabetizadas de 20 a 24 anos de idade, do sexo feminino e cor ou raça -indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V111.html">Pessoas alfabetizadas de 25 a 29 anos de idade, do sexo feminino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V112.html">Pessoas alfabetizadas de 25 a 29 anos de idade, do sexo feminino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V113.html">Pessoas alfabetizadas de 25 a 29 anos de idade, do sexo feminino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V114.html">Pessoas alfabetizadas de 25 a 29 anos de idade, do sexo feminino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V115.html">Pessoas alfabetizadas de 25 a 29 anos de idade, do sexo feminino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V116.html">Pessoas alfabetizadas de 30 a 34 anos de idade, do sexo feminino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V117.html">Pessoas alfabetizadas de 30 a 34 anos de idade, do sexo feminino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V118.html">Pessoas alfabetizadas de 30 a 34 anos de idade, do sexo feminino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V119.html">Pessoas alfabetizadas de 30 a 34 anos de idade, do sexo feminino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V120.html">Pessoas alfabetizadas de 30 a 34 anos de idade, do sexo feminino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V121.html">Pessoas alfabetizadas de 35 a 39 anos de idade, do sexo feminino e cor ou raça - branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V122.html">Pessoas alfabetizadas de 35 a 39 anos de idade, do sexo feminino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V123.html">Pessoas alfabetizadas de 35 a 39 anos de idade, do sexo feminino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V124.html">Pessoas alfabetizadas de 35 a 39 anos de idade, do sexo feminino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V125.html">Pessoas alfabetizadas de 35 a 39 anos de idade, do sexo feminino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V126.html">Pessoas alfabetizadas de 40 a 44 anos de idade, do sexo feminino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V127.html">Pessoas alfabetizadas de 40 a 44 anos de idade, do sexo feminino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V128.html">Pessoas alfabetizadas de 40 a 44 anos de idade, do sexo feminino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V129.html">Pessoas alfabetizadas de 40 a 44 anos de idade, do sexo feminino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V130.html">Pessoas alfabetizadas de 40 a 44 anos de idade, do sexo feminino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V131.html">Pessoas alfabetizadas de 45 a 49 anos de idade, do sexo feminino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V132.html">Pessoas alfabetizadas de 45 a 49 anos de idade, do sexo feminino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V133.html">Pessoas alfabetizadas de 45 a 49 anos de idade, do sexo feminino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V134.html">Pessoas alfabetizadas de 45 a 49 anos de idade, do sexo feminino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V135.html">Pessoas alfabetizadas de 45 a 49 anos de idade, do sexo feminino e cor ou raça  indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V136.html">Pessoas alfabetizadas de 50 a 54 anos de idade, do sexo feminino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V137.html">Pessoas alfabetizadas de 50 a 54 anos de idade, do sexo feminino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V138.html">Pessoas alfabetizadas de 50 a 54 anos de idade, do sexo feminino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V139.html">Pessoas alfabetizadas de 50 a 54 anos de idade, do sexo feminino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V140.html">Pessoas alfabetizadas de 50 a 54 anos de idade, do sexo feminino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V141.html">Pessoas alfabetizadas de 55 a 59 anos de idade,  do sexo feminino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V142.html">Pessoas alfabetizadas de 55 a 59 anos de idade, do sexo feminino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V143.html">Pessoas alfabetizadas de 55 a 59 anos de idade, do sexo feminino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V144.html">Pessoas alfabetizadas de 55 a 59 anos de idade, do sexo feminino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V145.html">Pessoas alfabetizadas de 55 a 59 anos de idade, do sexo feminino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V146.html">Pessoas alfabetizadas de 60 a 69 anos de idade, do sexo feminino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V147.html">Pessoas alfabetizadas de 60 a 69 anos de idade, do sexo feminino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V148.html">Pessoas alfabetizadas de 60 a 69 anos de idade, do sexo feminino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V149.html">Pessoas alfabetizadas de 60 a 69 anos de idade, do sexo feminino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V150.html">Pessoas alfabetizadas de 60 a 69 anos de idade, do sexo feminino e cor ou raça - indígena</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V151.html">Pessoas alfabetizadas de 70 anos ou mais de idade, do sexo feminino e cor ou raça  branca</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V152.html">Pessoas alfabetizadas de 70 anos ou mais de idade, do sexo feminino e cor ou raça  preta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V153.html">Pessoas alfabetizadas de 70 anos ou mais de idade, do sexo feminino e cor ou raça  amarela</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V154.html">Pessoas alfabetizadas de 70 anos ou mais de idade, do sexo feminino e cor ou raça  parda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="br.data.Pessoa01_V001/br.data.Pessoa04_V155.html">Pessoas alfabetizadas de 70 anos ou mais de idade, do sexo feminino e cor ou raça - indígena</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="boundaries">
+<h2>Boundaries<a class="headerlink" href="#boundaries" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Boundary</th>
+<th class="head">Time (default is latest)</th>
+</tr>
+</thead>
+<tbody valign="top"><tr class="row-even"><td><p><a class="reference internal" href="../boundary/br.geo.setores_censitarios.html#br-geo-setores-censitarios"><span class="std std-ref">Census tracts</span></a></p>
+</td>
+<td><p>2010</p>
+</td></tr>
+</tbody>
+</table></div>
+<div class="section" id="related-columns">
+<h2>Related columns<a class="headerlink" href="#related-columns" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><span class="xref std std-ref">None</span></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="source">
+<h2>Source<a class="headerlink" href="#source" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../../sources.html#br-data-ibge-censo"><span class="std std-ref">Censo Demográfico Instituto Brasileiro de Geografia e Estatística (IBGE)</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../../licenses.html#br-data-ibge-license"><span class="std std-ref">Law No. 12,527, OF November 18, 2011</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Pessoas alfabetizadas com 5 ou mais anos de idade (137 subcolumns)</a><ul>
+<li><a class="reference internal" href="#subcolumns">Subcolumns</a></li>
+<li><a class="reference internal" href="#boundaries">Boundaries</a></li>
+<li><a class="reference internal" href="#related-columns">Related columns</a></li>
+<li><a class="reference internal" href="#source">Source</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../br.html">Brazil</a><ul>
+  <li><a href="../race_ethnicity.html">Race and Ethnicity</a><ul>
+      <li>Previous: <a href="br.data.Entorno03_V422/br.data.Entorno05_V999.html" title="previous chapter">Moradores em domicílios particulares permanentes de cor ou raça parda  Existe calçada</a></li>
+      <li>Next: <a href="br.data.Pessoa01_V001/br.data.Pessoa04_V001.html" title="next chapter">Pessoas alfabetizadas de 7 a 9 anos de idade, do sexo masculino e cor ou raça - branca</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/br/race_ethnicity/br.data.Pessoa01_V001.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, CARTO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../../_sources/br/race_ethnicity/br.data.Pessoa01_V001.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
